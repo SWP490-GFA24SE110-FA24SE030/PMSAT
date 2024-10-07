@@ -10,15 +10,13 @@ namespace PMSAT.Data
         {
         
         }
+
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<User> Users { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserRole>()
-            .HasOne(ur => ur.User)
-            .WithOne(u => u.UserRole)
-            .HasForeignKey<User>(u => u.UserRoleID);
-
             // Data seeding for Roles
             modelBuilder.Entity<UserRole>().HasData(
                 new  { UserRoleID = "AD", UserRoleName = "Admin" },
