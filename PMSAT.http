@@ -1,6 +1,0 @@
-@PMSAT_HostAddress = http://localhost:5130
-
-GET {{PMSAT_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
