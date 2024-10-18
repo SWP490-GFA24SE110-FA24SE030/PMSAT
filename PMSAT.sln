@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PMSAT.DataTier", "PMSAT.DataTier\PMSAT.DataTier.csproj", "{912F66D0-8AA8-473F-972A-B2834AC60224}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{912F66D0-8AA8-473F-972A-B2834AC60224}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{912F66D0-8AA8-473F-972A-B2834AC60224}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{912F66D0-8AA8-473F-972A-B2834AC60224}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{912F66D0-8AA8-473F-972A-B2834AC60224}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0824F65C-3DAB-4FE8-92EA-35E3A2C11274}
+	EndGlobalSection
+EndGlobal
