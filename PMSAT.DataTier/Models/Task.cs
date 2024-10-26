@@ -21,8 +21,6 @@ public partial class Task
 
     public DateTime? EndDate { get; set; }
 
-    public virtual BackLog? Backlog { get; set; }
-
     public virtual ProjectMember? ProjectMember { get; set; }
 
     public virtual ICollection<TaskSprint> TaskSprints { get; set; } = new List<TaskSprint>();

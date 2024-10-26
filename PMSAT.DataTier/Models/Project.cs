@@ -17,8 +17,6 @@ public partial class Project
 
     public string? Status { get; set; }
 
-    public virtual ICollection<BackLog> BackLogs { get; set; } = new List<BackLog>();
-
     public virtual ICollection<ProjectAnalysisResult> ProjectAnalysisResults { get; set; } = new List<ProjectAnalysisResult>();
 
     public virtual ICollection<ProjectMember> ProjectMembers { get; set; } = new List<ProjectMember>();

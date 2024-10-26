@@ -15,8 +15,6 @@ public partial class PmsatContext : DbContext
     {
     }
 
-    public virtual DbSet<BackLog> BackLogs { get; set; }
-
     public virtual DbSet<Commit> Commits { get; set; }
 
     public virtual DbSet<Feedback> Feedbacks { get; set; }
@@ -53,18 +51,6 @@ public partial class PmsatContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<BackLog>(entity =>
-        {
-            entity.ToTable("BackLog");
-
-            entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Description).HasMaxLength(250);
-
-            entity.HasOne(d => d.Project).WithMany(p => p.BackLogs)
-                .HasForeignKey(d => d.ProjectId)
-                .HasConstraintName("FK_BackLog_Project");
-        });
-
         modelBuilder.Entity<Commit>(entity =>
         {
             entity.ToTable("Commit");
@@ -248,10 +234,6 @@ public partial class PmsatContext : DbContext
             entity.Property(e => e.Type)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-
-            entity.HasOne(d => d.Backlog).WithMany(p => p.Tasks)
-                .HasForeignKey(d => d.BacklogId)
-                .HasConstraintName("FK_Task_BackLog");
 
             entity.HasOne(d => d.ProjectMember).WithMany(p => p.Tasks)
                 .HasForeignKey(d => d.ProjectMemberId)
