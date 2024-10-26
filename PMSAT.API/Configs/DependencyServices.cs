@@ -36,6 +36,8 @@ namespace PMSAT.API.Configs
             services.AddScoped<IUserService, UserService>();
             //services.AddScoped<ICategoryService, CategoryService>();
 
+            services.AddScoped<IProjectService, ProjectService>();
+
 
             return services;
         }
