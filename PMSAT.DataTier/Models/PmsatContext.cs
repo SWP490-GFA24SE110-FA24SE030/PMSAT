@@ -99,7 +99,13 @@ public partial class PmsatContext : DbContext
             entity.ToTable("Project");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Description)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.EndDate).HasColumnType("datetime");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.StartDate).HasColumnType("datetime");
             entity.Property(e => e.Status)
                 .HasMaxLength(20)
