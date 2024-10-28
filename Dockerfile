@@ -16,7 +16,7 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 
 COPY . /source
 
-WORKDIR /source/SEP_PMSAT.API
+WORKDIR /source/PMSAT.API
 
 # This is the architecture you’re building for, which is passed in by the builder.
 # Placing it here allows the previous steps to be cached across architectures.
@@ -58,4 +58,4 @@ COPY --from=build /app .
 # and https://github.com/dotnet/dotnet-docker/discussions/4764
 USER $APP_UID
 
-ENTRYPOINT ["dotnet", "SEP_PMSAT.API.dll"]
+ENTRYPOINT ["dotnet", "PMSAT.API.dll"]
