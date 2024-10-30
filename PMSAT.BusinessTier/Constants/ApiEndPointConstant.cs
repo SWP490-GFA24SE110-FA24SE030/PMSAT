@@ -22,6 +22,12 @@ namespace PMSAT.BusinessTier.Constants
             public const string UserEndPoint = UsersEndPoint + "/{id}";
         }
 
+        public static class Project
+        {
+            public const string ProjectsEndPoint = ApiEndpoint + "/projects";
+            public const string CreateNewProjectEndPoint = ProjectsEndPoint + "/new";
+        }
+
         public static class Category
         {
             public const string CategoriesEndPoint = ApiEndpoint + "/categories";

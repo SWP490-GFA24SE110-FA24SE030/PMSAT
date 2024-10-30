@@ -7,9 +7,7 @@ public partial class Task
 {
     public Guid Id { get; set; }
 
-    public Guid? BacklogId { get; set; }
-
-    public Guid? ProjectMemberId { get; set; }
+    public Guid? TaskAsigner { get; set; }
 
     public string? Type { get; set; }
 
@@ -21,7 +19,9 @@ public partial class Task
 
     public DateTime? EndDate { get; set; }
 
-    public virtual ProjectMember? ProjectMember { get; set; }
+    public Guid? TaskAsignee { get; set; }
+
+    public virtual ProjectMember? TaskAsignerNavigation { get; set; }
 
     public virtual ICollection<TaskSprint> TaskSprints { get; set; } = new List<TaskSprint>();
 

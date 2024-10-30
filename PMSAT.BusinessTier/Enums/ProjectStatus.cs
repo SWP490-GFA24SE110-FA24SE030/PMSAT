@@ -8,7 +8,7 @@ namespace PMSAT.BusinessTier.Enums
 {
     public enum ProjectStatus
     {
-        Activate,
-        Deactivate
+        Public,
+        Private
     }
 }

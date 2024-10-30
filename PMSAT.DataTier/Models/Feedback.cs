@@ -11,7 +11,7 @@ public partial class Feedback
 
     public string? Type { get; set; }
 
-    public string? Content { get; set; }
+    public string? Fcontent { get; set; }
 
     public virtual User? User { get; set; }
 }

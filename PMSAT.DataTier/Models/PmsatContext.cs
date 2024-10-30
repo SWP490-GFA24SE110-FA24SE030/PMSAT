@@ -69,7 +69,9 @@ public partial class PmsatContext : DbContext
             entity.ToTable("Feedback");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Content).HasMaxLength(250);
+            entity.Property(e => e.Fcontent)
+                .HasMaxLength(250)
+                .HasColumnName("FContent");
             entity.Property(e => e.Type)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -241,8 +243,8 @@ public partial class PmsatContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.ProjectMember).WithMany(p => p.Tasks)
-                .HasForeignKey(d => d.ProjectMemberId)
+            entity.HasOne(d => d.TaskAsignerNavigation).WithMany(p => p.Tasks)
+                .HasForeignKey(d => d.TaskAsigner)
                 .HasConstraintName("FK_Task_ProjectMember");
         });
 
