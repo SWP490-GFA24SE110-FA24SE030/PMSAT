@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PMSAT.BusinessTier.Constants;
+using PMSAT.BusinessTier.Payload;
 using PMSAT.BusinessTier.Payload.Projects;
 using PMSAT.BusinessTier.Services.Implements;
 using PMSAT.BusinessTier.Services.Interfaces;
 using PMSAT.DataTier.Models;
+using PMSAT.DataTier.Paginate;
 
 namespace PMSAT.API.Controllers
 {
@@ -23,6 +25,14 @@ namespace PMSAT.API.Controllers
         public async Task<IActionResult> CreateNewProject(CreateNewProjectRequest request)
         {
             var response = await _projectService.CreateNewProject(request);
+            return Ok(response);
+        }
+
+        [HttpGet(ApiEndPointConstant.Project.ProjectsEndPoint)]
+        [ProducesResponseType(typeof(IPaginate<GetAllProjectReponse>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllProject([FromQuery] PagingModel paging)
+        {
+            var response = await _projectService.GetAllProject(paging);
             return Ok(response);
         }
     }
