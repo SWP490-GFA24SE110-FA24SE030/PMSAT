@@ -17,7 +17,7 @@ namespace PMSAT.API.Controllers
             _projectService = projectService;
         }
 
-        [HttpPost]
+        [HttpPost(ApiEndPointConstant.Project.CreateNewProjectEndPoint)]
         [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> CreateNewProject(CreateNewProjectRequest request)

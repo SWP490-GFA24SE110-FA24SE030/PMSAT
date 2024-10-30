@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PMSAT.BusinessTier.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,5 +16,7 @@ namespace PMSAT.BusinessTier.Payload.Projects
         public DateTime? StartDate { get; set; }
 
         public DateTime? EndDate { get; set; }
+
+        public ProjectStatus? Status { get; set; }
     }
 }

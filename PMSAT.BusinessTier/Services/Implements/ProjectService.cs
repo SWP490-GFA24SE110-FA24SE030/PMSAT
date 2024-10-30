@@ -29,9 +29,9 @@ namespace PMSAT.BusinessTier.Services.Implements
                 Id = Guid.NewGuid(),
                 Name = request.Name,
                 Description = request.Description,
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now,
-                Status = ProjectStatus.Activate.GetDescriptionFromEnum()
+                StartDate = request.StartDate,
+                EndDate = request.EndDate,
+                Status = request.Status.GetDescriptionFromEnum()
             };
 
             await _unitOfWork.GetRepository<Project>().InsertAsync(project);
