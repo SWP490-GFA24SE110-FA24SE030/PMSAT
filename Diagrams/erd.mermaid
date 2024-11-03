@@ -10,7 +10,6 @@ erDiagram
         uniqueidentifier Id PK
         int Score
         string WorkTrendAnalysis
-        datetime CreatedAt
         string ReviewerComments
         string Strengths
         string AreasForImprovement
@@ -39,8 +38,6 @@ erDiagram
 
         %% public | private
         string Status
-
-        uniqueidentifier UserId FK
     }
 
     AnalysisResult {
@@ -56,18 +53,14 @@ erDiagram
 
     ProjectMember {
         uniqueidentifier Id PK
-        datetime JoinedDate
-        datetime LeftDate
-        uniqueidentifier ProjectId FK
-    }
-
-    ProjectRole {
-        uniqueidentifier Id PK
 
         %% leader | .......
-        string Name
+        string Role
 
-        string Description
+        %% datetime JoinedDate
+        %% datetime LeftDate
+        uniqueidentifier UserId FK
+        uniqueidentifier ProjectId FK
     }
 
     PullRequest {
@@ -87,12 +80,6 @@ erDiagram
         string Owner
         string Url
         uniqueidentifier ProjectMemberId FK
-    }
-
-    RoleInProject {
-        uniqueidentifier Id PK
-        uniqueidentifier ProjectMemberId FK
-        uniqueidentifier ProjectRoleId FK
     }
 
     Sprint {
@@ -152,11 +139,9 @@ erDiagram
     User ||--o{ Feedback : has
     Project ||--o{ AnalysisResult : contains
     Project ||--o{ ProjectMember : has
-    User ||--o{ Project : has
+    User ||--o{ ProjectMember : has
     Repository ||--o{ PullRequest : has
     ProjectMember ||--o{ Repository : has
-    ProjectMember ||--o{ RoleInProject : has
-    ProjectRole ||--o{ RoleInProject : has
     Project ||--o{ Sprint : has
     Project ||--o{ Task : has
     ProjectMember ||--o{ Task : has
