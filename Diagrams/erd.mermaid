@@ -1,0 +1,144 @@
+erDiagram
+    Commit {
+        int Id PK
+        datetime CreatedAt
+        string Message
+        int RepositoryId FK
+    }
+
+    Feedback {
+        int Id PK
+        string FContent
+        string Type
+        int UserId FK
+    }
+
+    IntegrationConfig {
+        int Id PK
+        string ApiKey
+        string Settings
+        string ToolName
+        string Url
+        int UserId FK
+    }
+
+    Project {
+        int Id PK
+        string Description
+        datetime EndDate
+        string Name
+        datetime StartDate
+        string Status
+    }
+
+    ProjectAnalysisResult {
+        int Id PK
+        string Complexity
+        string Converage
+        string QualityMetrics
+        string RequirementError
+        string SecurityError
+        string SyntaxError
+        int ProjectId FK
+    }
+
+    ProjectMember {
+        int Id PK
+        datetime EndDate
+        datetime StartDate
+        datetime UpdateAt
+        int ProjectId FK
+        int UserId FK
+    }
+
+    ProjectRole {
+        int Id PK
+        string Description
+        string RoleName
+    }
+
+    PullRequest {
+        string Body
+        datetime CreatedAt
+        datetime MergedAt
+        string Number
+        string Status
+        string Title
+        string Url
+        int RepositoryId FK
+    }
+
+    Repository {
+        int Id PK
+        string Name
+        string Owner
+        string Url
+        int ProjectMemberId FK
+    }
+
+    RoleInProject {
+        int Id PK
+        int ProjectMemberId FK
+        int ProjectRoleId FK
+    }
+
+    Sprint {
+        int Id PK
+        datetime EndDate
+        string Name
+        datetime StartDate
+        string Status
+        int ProjectId FK
+    }
+
+    Task {
+        int Id PK
+        string Description
+        datetime EndDate
+        datetime StartDate
+        string Type
+        int TaskAsigner FK
+    }
+
+    TaskSprint {
+        int Id PK
+        datetime EndDate
+        datetime StartDate
+        int SprintId FK
+        int TaskId FK
+    }
+
+    User {
+        int Id PK
+        string Email
+        string Password
+        string Role
+        string Status
+        string Username
+    }
+
+    WorkFlow {
+        int Id PK
+        string FromStatus
+        string Status
+        string ToStatus
+        datetime UpdatedAt
+        int TaskId FK
+    }
+
+    %% Relationships
+    Commit ||--o{ Repository : belongs_to
+    Feedback ||--o{ User : belongs_to
+    IntegrationConfig ||--o{ User : belongs_to
+    Project ||--o{ ProjectAnalysisResult : contains
+    ProjectMember ||--o{ Project : belongs_to
+    ProjectMember ||--o{ User : belongs_to
+    PullRequest ||--o{ Repository : belongs_to
+    Repository ||--o{ ProjectMember : has
+    RoleInProject ||--o{ ProjectMember : belongs_to
+    RoleInProject ||--o{ ProjectRole : belongs_to
+    Sprint ||--o{ Project : belongs_to
+    Task ||--o{ ProjectMember : assigned_to
+    TaskSprint ||--o{ Task : belongs_to
+    TaskSprint ||--o{ Sprint : belongs_to
+    WorkFlow ||--o{ Task : belongs_to
