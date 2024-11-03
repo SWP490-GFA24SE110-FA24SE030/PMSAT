@@ -6,11 +6,29 @@ erDiagram
         uniqueidentifier RepositoryId FK
     }
 
+    EvaluationResult {
+        uniqueidentifier Id PK
+        int Score
+        string WorkTrendAnalysis
+        datetime CreatedAt
+        string ReviewerComments
+        string Strengths
+        string AreasForImprovement
+        uniqueidentifier ProjectMemberId FK
+    }
+
     Feedback {
         uniqueidentifier Id PK
         string Type
         string Detail
         uniqueidentifier UserId FK
+    }
+
+    Issue {
+        uniqueidentifier Id PK
+        string Type
+        string Detail
+        uniqueidentifier TaskId FK
     }
 
     Project {
@@ -142,7 +160,7 @@ erDiagram
     Project ||--o{ Sprint : has
     Project ||--o{ Task : has
     ProjectMember ||--o{ Task : has
-    ProjectMember ||--o{ Metric : has
+    ProjectMember ||--o{ EvaluationResult : has
     Task ||--o{ TaskSprint : has
     Task ||--o{ Issue : has
     Sprint ||--o{ TaskSprint : has
