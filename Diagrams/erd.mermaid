@@ -1,144 +1,149 @@
 erDiagram
     Commit {
-        int Id PK
+        uniqueidentifier Id PK
         datetime CreatedAt
         string Message
-        int RepositoryId FK
+        uniqueidentifier RepositoryId FK
     }
 
     Feedback {
-        int Id PK
-        string FContent
+        uniqueidentifier Id PK
         string Type
-        int UserId FK
-    }
-
-    IntegrationConfig {
-        int Id PK
-        string ApiKey
-        string Settings
-        string ToolName
-        string Url
-        int UserId FK
+        string Detail
+        uniqueidentifier UserId FK
     }
 
     Project {
-        int Id PK
+        uniqueidentifier Id PK
+        string Title
         string Description
-        datetime EndDate
-        string Name
-        datetime StartDate
+        datetime CreatedAt
+
+        %% public | private
         string Status
+
+        uniqueidentifier UserId FK
     }
 
-    ProjectAnalysisResult {
-        int Id PK
-        string Complexity
-        string Converage
+    AnalysisResult {
+        uniqueidentifier Id PK
+        string Coverage
+        string CodeComplexity
         string QualityMetrics
         string RequirementError
         string SecurityError
         string SyntaxError
-        int ProjectId FK
+        uniqueidentifier ProjectId FK
     }
 
     ProjectMember {
-        int Id PK
-        datetime EndDate
-        datetime StartDate
-        datetime UpdateAt
-        int ProjectId FK
-        int UserId FK
+        uniqueidentifier Id PK
+        datetime JoinedDate
+        datetime LeftDate
+        uniqueidentifier ProjectId FK
     }
 
     ProjectRole {
-        int Id PK
+        uniqueidentifier Id PK
+
+        %% leader | .......
+        string Name
+
         string Description
-        string RoleName
     }
 
     PullRequest {
+        uniqueidentifier Id PK
+        string Title
         string Body
+        string Url
         datetime CreatedAt
         datetime MergedAt
-        string Number
         string Status
-        string Title
-        string Url
-        int RepositoryId FK
+        uniqueidentifier RepositoryId FK
     }
 
     Repository {
-        int Id PK
+        uniqueidentifier Id PK
         string Name
         string Owner
         string Url
-        int ProjectMemberId FK
+        uniqueidentifier ProjectMemberId FK
     }
 
     RoleInProject {
-        int Id PK
-        int ProjectMemberId FK
-        int ProjectRoleId FK
+        uniqueidentifier Id PK
+        uniqueidentifier ProjectMemberId FK
+        uniqueidentifier ProjectRoleId FK
     }
 
     Sprint {
-        int Id PK
-        datetime EndDate
+        uniqueidentifier Id PK
         string Name
         datetime StartDate
+        datetime EndDate
+
+        %% in progress | done
         string Status
-        int ProjectId FK
+
+        uniqueidentifier ProjectId FK
     }
 
     Task {
-        int Id PK
-        string Description
-        datetime EndDate
-        datetime StartDate
+        uniqueidentifier Id PK
         string Type
-        int TaskAsigner FK
+        string Description
+        datetime StartDate
+        datetime EndDate
+        uniqueidentifier ProjectMemberId FK
+        uniqueidentifier ProjectId FK
     }
 
     TaskSprint {
-        int Id PK
-        datetime EndDate
-        datetime StartDate
-        int SprintId FK
-        int TaskId FK
+        uniqueidentifier Id PK
+        datetime UpdateStartDate
+        datetime UpdateEndDate
+        uniqueidentifier SprintId FK
+        uniqueidentifier TaskId FK
     }
 
     User {
-        int Id PK
+        uniqueidentifier Id PK
+        string Name
         string Email
         string Password
+
+        %% admin | user | moderator
         string Role
+
+        %% activated | deactivated
         string Status
-        string Username
     }
 
     WorkFlow {
-        int Id PK
-        string FromStatus
-        string Status
-        string ToStatus
+        uniqueidentifier Id PK
+        string OldStatus
+        string CurrentStatus
+        string NewStatus
         datetime UpdatedAt
-        int TaskId FK
+        uniqueidentifier TaskId FK
     }
 
     %% Relationships
-    Commit ||--o{ Repository : belongs_to
-    Feedback ||--o{ User : belongs_to
-    IntegrationConfig ||--o{ User : belongs_to
-    Project ||--o{ ProjectAnalysisResult : contains
-    ProjectMember ||--o{ Project : belongs_to
-    ProjectMember ||--o{ User : belongs_to
-    PullRequest ||--o{ Repository : belongs_to
-    Repository ||--o{ ProjectMember : has
-    RoleInProject ||--o{ ProjectMember : belongs_to
-    RoleInProject ||--o{ ProjectRole : belongs_to
-    Sprint ||--o{ Project : belongs_to
-    Task ||--o{ ProjectMember : assigned_to
-    TaskSprint ||--o{ Task : belongs_to
-    TaskSprint ||--o{ Sprint : belongs_to
-    WorkFlow ||--o{ Task : belongs_to
+    Repository ||--o{ Commit : has
+    User ||--o{ Feedback : has
+    Project ||--o{ AnalysisResult : contains
+    Project ||--o{ ProjectMember : has
+    User ||--o{ Project : has
+    Repository ||--o{ PullRequest : has
+    ProjectMember ||--o{ Repository : has
+    ProjectMember ||--o{ RoleInProject : has
+    ProjectRole ||--o{ RoleInProject : has
+    Project ||--o{ Sprint : has
+    Project ||--o{ Task : has
+    ProjectMember ||--o{ Task : has
+    ProjectMember ||--o{ Metric : has
+    Task ||--o{ TaskSprint : has
+    Task ||--o{ Issue : has
+    Sprint ||--o{ TaskSprint : has
+    Task ||--o{ WorkFlow : has
