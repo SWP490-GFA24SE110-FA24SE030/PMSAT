@@ -1,0 +1,152 @@
+erDiagram
+    Commit {
+        uniqueidentifier Id PK
+        datetime CreatedAt
+        string Message
+        uniqueidentifier RepositoryId FK
+    }
+
+    EvaluationResult {
+        uniqueidentifier Id PK
+        int Score
+        string WorkTrendAnalysis
+        string ReviewerComments
+        string Strengths
+        string AreasForImprovement
+        uniqueidentifier ProjectMemberId FK
+    }
+
+    Feedback {
+        uniqueidentifier Id PK
+        string Type
+        string Detail
+        uniqueidentifier UserId FK
+    }
+
+    Issue {
+        uniqueidentifier Id PK
+        string Type
+        string Detail
+        uniqueidentifier TaskId FK
+    }
+
+    Project {
+        uniqueidentifier Id PK
+        string Title
+        string Description
+        datetime CreatedAt
+
+        %% public | private
+        string Status
+    }
+
+    AnalysisResult {
+        uniqueidentifier Id PK
+        string Coverage
+        string CodeComplexity
+        string QualityMetrics
+        string RequirementError
+        string SecurityError
+        string SyntaxError
+        uniqueidentifier ProjectId FK
+    }
+
+    ProjectMember {
+        uniqueidentifier Id PK
+
+        %% leader | .......
+        string Role
+
+        %% datetime JoinedDate
+        %% datetime LeftDate
+        uniqueidentifier UserId FK
+        uniqueidentifier ProjectId FK
+    }
+
+    PullRequest {
+        uniqueidentifier Id PK
+        string Title
+        string Body
+        string Url
+        datetime CreatedAt
+        datetime MergedAt
+        string Status
+        uniqueidentifier RepositoryId FK
+    }
+
+    Repository {
+        uniqueidentifier Id PK
+        string Name
+        string Owner
+        string Url
+        uniqueidentifier ProjectMemberId FK
+    }
+
+    Sprint {
+        uniqueidentifier Id PK
+        string Name
+        datetime StartDate
+        datetime EndDate
+
+        %% in progress | done
+        string Status
+
+        uniqueidentifier ProjectId FK
+    }
+
+    Task {
+        uniqueidentifier Id PK
+        string Type
+        string Description
+        datetime StartDate
+        datetime EndDate
+        uniqueidentifier ProjectMemberId FK
+        uniqueidentifier ProjectId FK
+    }
+
+    TaskSprint {
+        uniqueidentifier Id PK
+        datetime UpdateStartDate
+        datetime UpdateEndDate
+        uniqueidentifier SprintId FK
+        uniqueidentifier TaskId FK
+    }
+
+    User {
+        uniqueidentifier Id PK
+        string Name
+        string Email
+        string Password
+
+        %% admin | user | moderator
+        string Role
+
+        %% activated | deactivated
+        string Status
+    }
+
+    WorkFlow {
+        uniqueidentifier Id PK
+        string OldStatus
+        string CurrentStatus
+        string NewStatus
+        datetime UpdatedAt
+        uniqueidentifier TaskId FK
+    }
+
+    %% Relationships
+    Repository ||--o{ Commit : has
+    User ||--o{ Feedback : has
+    Project ||--o{ AnalysisResult : contains
+    Project ||--o{ ProjectMember : has
+    User ||--o{ ProjectMember : has
+    Repository ||--o{ PullRequest : has
+    ProjectMember ||--o{ Repository : has
+    Project ||--o{ Sprint : has
+    Project ||--o{ Task : has
+    ProjectMember ||--o{ Task : has
+    ProjectMember ||--o{ EvaluationResult : has
+    Task ||--o{ TaskSprint : has
+    Task ||--o{ Issue : has
+    Sprint ||--o{ TaskSprint : has
+    Task ||--o{ WorkFlow : has
