@@ -1,0 +1,27 @@
+graph LR
+    %% Central System Node
+    A[Project Management Platform]
+
+    %% External Entities (Actors and Systems)
+    B[Project Leader]
+    C[Project Member]
+    D[GitHub]
+    F[SonarQube]
+    H[Email/Notification System]
+    I[Database]
+
+    %% Data Flows
+    B -->|Creates tasks, tracks progress| A
+    C -->|Commits tasks to| A
+    D -->|Sends code commits, pull requests| A
+    F -->|Sends code quality metrics| A
+    H -->|Sends notifications, alerts| A
+    A -->|Stores project and code data| I
+    A -->|Sends reports, feedback to| B
+    A -->|Sends code quality feedback to| C
+
+    %% Style the central node to look circular
+    class A circleNode;
+
+    %% Define the class for circle-like style
+    classDef circleNode fill:#fff,stroke:#333,stroke-width:2px;
