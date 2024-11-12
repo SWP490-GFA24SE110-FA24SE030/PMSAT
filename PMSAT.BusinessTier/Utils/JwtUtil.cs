@@ -14,34 +14,36 @@ namespace PMSAT.BusinessTier.Utils
 {
     public class JwtUtil
     {
+        public static object JwtConstant { get; private set; }
+
         private JwtUtil()
         {
         }
 
-        public static TokenModel GenerateJwtToken(User user)
-        {
-            ;
-            JwtSecurityTokenHandler jwtTokenHandler = new JwtSecurityTokenHandler();
-            SymmetricSecurityKey secrectKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtConstant.SecretKey));
-            var credentials = new SigningCredentials(secrectKey, SecurityAlgorithms.HmacSha256Signature);
-            var issuer = JwtConstant.Issuer;
-            List<Claim> claims = new List<Claim>()
-            {
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim("userId", user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, user.Username),
-                new Claim(ClaimTypes.Role, user.Role),
-            };
-            var expires = DateTime.Now.AddDays(1);
-            var token = new JwtSecurityToken(issuer, null, claims, notBefore: DateTime.Now, expires, credentials);
-            var accessToken = jwtTokenHandler.WriteToken(token);
-            var refreshToken = GenerateRefreshToken();
-            return new TokenModel
-            {
-                AccessToken = accessToken,
-                RefreshToken = refreshToken,
-            };
-        }
+        //public static TokenModel GenerateJwtToken(User user)
+        //{
+        //    ;
+        //    JwtSecurityTokenHandler jwtTokenHandler = new JwtSecurityTokenHandler();
+        //    SymmetricSecurityKey secrectKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtConstant.SecretKey));
+        //    var credentials = new SigningCredentials(secrectKey, SecurityAlgorithms.HmacSha256Signature);
+        //    var issuer = JwtConstant.Issuer;
+        //    List<Claim> claims = new List<Claim>()
+        //    {
+        //        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        //        new Claim("userId", user.Id.ToString()),
+        //        new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+        //        new Claim(ClaimTypes.Role, user.Role),
+        //    };
+        //    var expires = DateTime.Now.AddDays(1);
+        //    var token = new JwtSecurityToken(issuer, null, claims, notBefore: DateTime.Now, expires, credentials);
+        //    var accessToken = jwtTokenHandler.WriteToken(token);
+        //    var refreshToken = GenerateRefreshToken();
+        //    return new TokenModel
+        //    {
+        //        AccessToken = accessToken,
+        //        RefreshToken = refreshToken,
+        //    };
+        //}
 
         private static string GenerateRefreshToken()
         {
@@ -60,7 +62,6 @@ namespace PMSAT.BusinessTier.Utils
                 ValidateAudience = false,
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtConstant.SecretKey)),
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero
             };

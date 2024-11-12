@@ -5,16 +5,15 @@ using PMSAT.BusinessTier.Payload.Projects;
 using PMSAT.BusinessTier.Services.Implements;
 using PMSAT.BusinessTier.Services.Interfaces;
 using PMSAT.DataTier.Models;
-using PMSAT.DataTier.Paginate;
 
 namespace PMSAT.API.Controllers
 {
     [ApiController]
-    public class ProjectController : BaseController<ProjectController>
+    public class ProjectController : ControllerBase
     {
         private readonly IProjectService _projectService;
 
-        public ProjectController(ILogger<ProjectController> logger, IProjectService projectService) : base(logger)
+        public ProjectController(ILogger<ProjectController> logger, IProjectService projectService)
         {
             _projectService = projectService;
         }
@@ -28,12 +27,12 @@ namespace PMSAT.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet(ApiEndPointConstant.Project.ProjectsEndPoint)]
-        [ProducesResponseType(typeof(IPaginate<GetAllProjectReponse>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllProject([FromQuery] PagingModel paging)
-        {
-            var response = await _projectService.GetAllProject(paging);
-            return Ok(response);
-        }
+        //[HttpGet(ApiEndPointConstant.Project.ProjectsEndPoint)]
+        //[ProducesResponseType(typeof(GetAllProjectReponse), StatusCodes.Status200OK)]
+        //public async Task<IActionResult> GetAllProject([FromQuery] PagingModel paging)
+        //{
+        //    var response = await _projectService.GetAllProject(paging);
+        //    return Ok(response);
+        //}
     }
 }

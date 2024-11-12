@@ -6,8 +6,6 @@ using PMSAT.BusinessTier.Constants;
 using PMSAT.BusinessTier.Services.Implements;
 using PMSAT.BusinessTier.Services.Interfaces;
 using PMSAT.DataTier.Models;
-using PMSAT.DataTier.Repository.Implement;
-using PMSAT.Repository.Interfaces;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
 
@@ -15,11 +13,6 @@ namespace PMSAT.API.Configs
 {
     public static class DependencyServices
     {
-        public static IServiceCollection AddUnitOfWork(this IServiceCollection services)
-        {
-            services.AddScoped<IUnitOfWork<PmsatContext>, UnitOfWork<PmsatContext>>();
-            return services;
-        }
 
         public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
@@ -42,28 +35,28 @@ namespace PMSAT.API.Configs
             return services;
         }
 
-        public static IServiceCollection AddJwtValidation(this IServiceCollection services)
-        {
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    ValidIssuer = JwtConstant.Issuer,
-                    ValidateIssuer = true,
-                    ValidateAudience = false,
-                    ValidateIssuerSigningKey = true,
-                    ClockSkew = TimeSpan.Zero,
-                    ValidateLifetime = true,
-                    IssuerSigningKey =
-                          new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtConstant.SecretKey))
-                };
-            });
-            return services;
-        }
+        //public static IServiceCollection AddJwtValidation(this IServiceCollection services)
+        //{
+        //    services.AddAuthentication(options =>
+        //    {
+        //        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        //        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        //    }).AddJwtBearer(options =>
+        //    {
+        //        options.TokenValidationParameters = new TokenValidationParameters()
+        //        {
+        //            ValidIssuer = JwtConstant.Issuer,
+        //            ValidateIssuer = true,
+        //            ValidateAudience = false,
+        //            ValidateIssuerSigningKey = true,
+        //            ClockSkew = TimeSpan.Zero,
+        //            ValidateLifetime = true,
+        //            IssuerSigningKey =
+        //                  new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtConstant.SecretKey))
+        //        };
+        //    });
+        //    return services;
+        //}
 
         public static IServiceCollection AddConfigSwagger(this IServiceCollection services)
         {

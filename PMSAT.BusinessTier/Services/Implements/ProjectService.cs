@@ -8,8 +8,6 @@ using PMSAT.BusinessTier.Payload.Projects;
 using PMSAT.BusinessTier.Services.Interfaces;
 using PMSAT.BusinessTier.Utils;
 using PMSAT.DataTier.Models;
-using PMSAT.DataTier.Paginate;
-using PMSAT.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +16,14 @@ using System.Threading.Tasks;
 
 namespace PMSAT.BusinessTier.Services.Implements
 {
-    public class ProjectService : BaseService<ProjectService>, IProjectService
+    public class ProjectService : IProjectService
     {
-        public ProjectService(IUnitOfWork<PmsatContext> unitOfWork, ILogger<ProjectService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(unitOfWork, logger, mapper, httpContextAccessor)
+        
+        private readonly PmsatContext _context;
+
+        public ProjectService(PmsatContext context)
         {
+            _context = context;
         }
 
         public async Task<Guid> CreateNewProject(CreateNewProjectRequest request)
@@ -36,22 +38,31 @@ namespace PMSAT.BusinessTier.Services.Implements
                 Status = request.Status.GetDescriptionFromEnum()
             };
 
-            await _unitOfWork.GetRepository<Project>().InsertAsync(project);
-            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.User.CreateUserFailed);
+            // Insert the project into the database
+            await _context.Projects.AddAsync(project);
+
+            // Commit the transaction if applicable, depending on your ORM
+            int rowsAffected = await _context.SaveChangesAsync(); // Replace with actual method to commit changes
+
+            if (rowsAffected <= 0)
+            {
+                throw new InvalidOperationException("Failed to create project. Please try again later.");
+            }
+
+            // Return the ID of the created project
             return project.Id;
         }
 
-        public Task<IPaginate<GetAllProjectReponse>> GetAllProject(PagingModel pagingModel)
-        {
-            var response = _unitOfWork.GetRepository<Project>().GetPagingListAsync(
-                selector: project => new GetAllProjectReponse(project.Id,project.Name,EnumUtil.ParseEnum<ProjectStatus>(project.Status)),
-                page: pagingModel.page,
-                size: pagingModel.size,
-                orderBy: x => x.OrderByDescending(x => x.Name)
-                );
+        //public Task<GetAllProjectReponse> GetAllProject(PagingModel pagingModel)
+        //{
+        //    var response = _unitOfWork.GetRepository<Project>().GetPagingListAsync(
+        //        selector: project => new GetAllProjectReponse(project.Id,project.Name,EnumUtil.ParseEnum<ProjectStatus>(project.Status)),
+        //        page: pagingModel.page,
+        //        size: pagingModel.size,
+        //        orderBy: x => x.OrderByDescending(x => x.Name)
+        //        );
 
-            return response;
-        }
+        //    return response;
+        //}
     }
 }

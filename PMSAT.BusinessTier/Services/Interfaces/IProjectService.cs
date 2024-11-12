@@ -1,6 +1,5 @@
 ﻿using PMSAT.BusinessTier.Payload;
 using PMSAT.BusinessTier.Payload.Projects;
-using PMSAT.DataTier.Paginate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +11,6 @@ namespace PMSAT.BusinessTier.Services.Interfaces
     public interface IProjectService
     {
         Task<Guid> CreateNewProject(CreateNewProjectRequest request);
-        Task<IPaginate<GetAllProjectReponse>> GetAllProject(PagingModel pagingModel);
+        //Task<GetAllProjectReponse> GetAllProject(PagingModel pagingModel);
     }
 }
