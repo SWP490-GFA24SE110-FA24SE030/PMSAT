@@ -1,7 +1,0 @@
-Scaffold-DbContext "Server=14.225.204.144,6789;Database=PMSAT;uid=pmsat;pwd=12345" Microsoft.EntityFrameworkCore.SqlServer -o Models -f
-
-dotnet tool install --global dotnet-ef
-dotnet tool install --global dotnet-ef --version 7.*
-
-dotnet ef dbcontext scaffold "Server=14.225.204.144,6789;Database=PMSAT;Uid=pmsat;Pwd=12345;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -o Models -f
-
