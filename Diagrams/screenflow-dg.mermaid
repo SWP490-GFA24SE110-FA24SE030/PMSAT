@@ -1,0 +1,56 @@
+graph TB
+    %% Login Flow (All Roles)
+    A[Login Screen] -->|Submit Credentials| B[Home Screen]
+
+    %% Home Flow (Member, Project Leader)
+    B -->|Navigate to Projects| C[Project List Screen]
+    B -->|View Profile| D[Profile Screen]
+    B -->|View Task Management| E[Task List Screen]
+    B -->|View Member Evaluation| Z[Member Evaluation Screen] 
+    B -->|View Progress Chart| W[Progress Chart Screen]
+    B -->|View Tips and Tricks| X[Tips and Tricks Screen] 
+
+    %% Project Management Flow (Project Member, Project Leader)
+    C -->|Create Project| F[Create Project Screen] 
+    C -->|View Project Details| G[Project Details Screen]
+    F -->|Submit Project| G
+    G -->|Manage Tasks| H[Task List Screen]
+    G -->|Manage Sprints| I[Sprint Management Screen] 
+    G -->|Link GitHub Repo| P[GitHub Repo Link Screen]
+    G -->|View SonarQube Report| M[SonarQube Analysis Report Screen]
+
+    %% Task Management Flow (Project Member, Project Leader)
+    H -->|View Task| J[Task Details Screen]
+    H -->|Create Task| K[Create Task Screen] 
+    J -->|Update Task Status| L[Task Status Screen]
+    K -->|Submit Task| J
+
+    %% SonarQube Integration Flow (Project Member, Project Leader)
+    J -->|View SonarQube Report| M[SonarQube Analysis Report Screen]
+    M -->|View Code Issues| N[View Code Issues Screen]
+    M -->|View Code Suggestions| O[View Code Suggestions Screen]
+    M -->|Assign Issues| N
+    N -->|Assign to Member| O[Member Task Screen]
+    O -->|Email Notification| Q[Email Notification to Member] 
+
+    %% GitHub Integration Flow (Project Member, Project Leader)
+    P -->|Commit Code| Q[GitHub Commit Screen]
+    Q -->|Track Commit| R[GitHub Commit History Screen]
+
+    %% Profile Management Flow (All Users)
+    D -->|Edit Profile| S[Edit Profile Screen]
+    S -->|Save Changes| D
+
+    %% Admin Actions Flow (Admin only)
+    B -->|CRUD Post Tips and Tricks| AC[Post Management Screen]
+    B -->|Manage Users| Y[User Management Screen]
+
+    %% Logout Flow
+    B -->|Logout| A
+
+    %% Labels for Roles
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,Z,W,X,Y,AA,AB,AC user;
+    class Y,AA,AB,AC admin;
+
+    classDef user fill:#fff,stroke:#333,stroke-width:2px;
+    classDef admin fill:#ff8,stroke:#333,stroke-width:2px;
