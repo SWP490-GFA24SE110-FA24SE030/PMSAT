@@ -53,6 +53,44 @@ namespace api.Controllers
             return CreatedAtAction(nameof(GetById), new { id = projectModel.Id}, projectModel.ToProjectDto());
         }
 
-        
+        [HttpPut]
+        [Route("edit/{id}")]
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateProjectRequestDto updateProjectRequestDto)
+        {
+            var projectModel = await _projectRepo.UpdateByIdAsync(id, updateProjectRequestDto);
+
+            if (projectModel == null)
+            {
+                return NotFound();
+            }
+            return Ok();
+        }
+        [HttpDelete]
+        [Route("delete/{id}")]
+        public async Task<IActionResult> DeleteByIdAsync([FromRoute] Guid id)
+        {
+            var projectModel = await _projectRepo.DeleteByIdAsync(id);
+
+            if (projectModel == null)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete]
+        [Route("delete/all")]
+        public async Task<IActionResult> DeleteAllAsync()
+        {
+            var projectModel = await _projectRepo.DeleteAllAsync();
+
+            if (projectModel == null)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
     }
 }

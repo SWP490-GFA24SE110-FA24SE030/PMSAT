@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Dtos.Project;
 using api.Interfaces;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,21 @@ namespace api.Repository
             await _context.Projects.AddAsync(projectModel);
             await _context.SaveChangesAsync();
             return projectModel;
+        }
+
+        public async Task<List<Project>> DeleteAllAsync()
+        {
+            // Get all projects
+            var projectList = await _context.Projects.ToListAsync();
+
+            // Remove all projects
+            _context.Projects.RemoveRange(projectList);
+
+            // Save changes to the database
+            await _context.SaveChangesAsync();
+
+            // Return the list of deleted projects
+            return projectList;
         }
 
         public async Task<Project> DeleteByIdAsync(Guid id)
@@ -54,9 +70,21 @@ namespace api.Repository
             return _context.Projects.AnyAsync(p => p.Id == id);
         }
 
-        public Task<Project?> UpdateByIdAsync(Guid id)
+        public async Task<Project?> UpdateByIdAsync(Guid id, UpdateProjectRequestDto projectDto)
         {
-            throw new NotImplementedException();
+            var existingProject = await _context.Projects.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (existingProject == null)
+            {
+                return null;
+            }
+
+            existingProject.Title = projectDto.Title;
+            existingProject.Description = projectDto.Description;
+            existingProject.Status = projectDto.Status;
+
+            await _context.SaveChangesAsync();
+            return existingProject;
         }
     }
 }
