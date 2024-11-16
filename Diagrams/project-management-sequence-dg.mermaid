@@ -8,9 +8,8 @@ sequenceDiagram
     participant ProjectController
     participant IProjectRepository
     participant ProjectRepository
-    database Database
+    participant Database
     
-
     %% Create Project (This can be done by anyone with the correct permissions)
     User->>ProjectController: Send CreateProjectRequest(CreateProjectDto)
     activate ProjectController
@@ -34,15 +33,13 @@ sequenceDiagram
             IProjectRepository-->>ProjectController: Return Success
             deactivate IProjectRepository
             ProjectController-->>User: Return Success("Project Created Successfully")
-            deactivate ProjectController
         else If Invalid Input
             ProjectController-->>User: Return Error("Invalid Project Data")
-            deactivate ProjectController
         end
     else
         ProjectController-->>User: Return Error("Permission Denied: Only Project Leaders can create projects")
-        deactivate ProjectController
     end
+    deactivate ProjectController
 
     %% Delete Project (Only project leader can delete)
     User->>ProjectController: Send DeleteProjectRequest(projectID)
@@ -65,11 +62,10 @@ sequenceDiagram
         IProjectRepository-->>ProjectController: Return Success
         deactivate IProjectRepository
         ProjectController-->>User: Return Success("Project Deleted Successfully")
-        deactivate ProjectController
     else
         ProjectController-->>User: Return Error("Permission Denied: Only Project Leaders can delete projects")
-        deactivate ProjectController
     end
+    deactivate ProjectController
 
     %% Add Member to Project (Only project leader can add members)
     User->>ProjectController: Send AddMemberRequest(projectID, memberID)
@@ -92,11 +88,10 @@ sequenceDiagram
         IProjectRepository-->>ProjectController: Return Success
         deactivate IProjectRepository
         ProjectController-->>User: Return Success("Member Added Successfully")
-        deactivate ProjectController
     else
         ProjectController-->>User: Return Error("Permission Denied: Only Project Leaders can add members")
-        deactivate ProjectController
     end
+    deactivate ProjectController
 
     %% Define Member Role (Only project leader can define roles for members)
     User->>ProjectController: Send EditMemberRoleRequest(projectID, memberID, newRole)
@@ -119,11 +114,10 @@ sequenceDiagram
         IProjectRepository-->>ProjectController: Return Success
         deactivate IProjectRepository
         ProjectController-->>User: Return Success("Member Role Updated Successfully")
-        deactivate ProjectController
     else
         ProjectController-->>User: Return Error("Permission Denied: Only Project Leaders can define roles")
-        deactivate ProjectController
     end
+    deactivate ProjectController
 
     %% Remove Member from Project (Only project leader can remove members)
     User->>ProjectController: Send RemoveMemberRequest(projectID, memberID)
@@ -146,11 +140,10 @@ sequenceDiagram
         IProjectRepository-->>ProjectController: Return Success
         deactivate IProjectRepository
         ProjectController-->>User: Return Success("Member Removed Successfully")
-        deactivate ProjectController
     else
         ProjectController-->>User: Return Error("Permission Denied: Only Project Leaders can remove members")
-        deactivate ProjectController
     end
+    deactivate ProjectController
 
     %% View Member Progress (Only project leader can view individual progress)
     User->>ProjectController: Request ViewMemberProgress(projectID, memberID)
@@ -173,11 +166,10 @@ sequenceDiagram
         IProjectRepository-->>ProjectController: Return Member Progress Data
         deactivate IProjectRepository
         ProjectController-->>User: Return Member Progress Data
-        deactivate ProjectController
     else
         ProjectController-->>User: Return Error("Permission Denied: Only Project Leaders can view member progress")
-        deactivate ProjectController
     end
+    deactivate ProjectController
 
     %% Notes for additional clarity
     note over User,ProjectController: User can perform multiple project management tasks,\nbut only project leaders can delete, add/remove members, define roles, and view progress.
