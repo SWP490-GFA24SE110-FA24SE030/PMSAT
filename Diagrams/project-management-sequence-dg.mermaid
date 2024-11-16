@@ -1,0 +1,185 @@
+sequenceDiagram
+    %% Title for the Diagram
+    title Project Management with JWT 
+
+    %% Participants (Objects involved in the interaction)
+    actor User
+    participant JWTService
+    participant ProjectController
+    participant IProjectRepository
+    participant ProjectRepository
+    database Database
+    
+
+    %% Create Project (This can be done by anyone with the correct permissions)
+    User->>ProjectController: Send CreateProjectRequest(CreateProjectDto)
+    activate ProjectController
+    ProjectController->>JWTService: Verify JWT Token and Extract Role
+    activate JWTService
+    JWTService-->>ProjectController: Return Role (e.g., "Project Leader")
+    deactivate JWTService
+    alt If User is Project Leader
+        ProjectController->>ProjectController: Validate Input(CreateProjectDto)
+        alt If Valid Input
+            ProjectController->>IProjectRepository: CreateProject(CreateProjectDto)
+            activate IProjectRepository
+            IProjectRepository->>ProjectRepository: CreateProject(CreateProjectDto)
+            activate ProjectRepository
+            ProjectRepository->>Database: Insert Project Data
+            activate Database
+            Database-->>ProjectRepository: Return Success (Project Created)
+            deactivate Database
+            ProjectRepository-->>IProjectRepository: Return Success
+            deactivate ProjectRepository
+            IProjectRepository-->>ProjectController: Return Success
+            deactivate IProjectRepository
+            ProjectController-->>User: Return Success("Project Created Successfully")
+            deactivate ProjectController
+        else If Invalid Input
+            ProjectController-->>User: Return Error("Invalid Project Data")
+            deactivate ProjectController
+        end
+    else
+        ProjectController-->>User: Return Error("Permission Denied: Only Project Leaders can create projects")
+        deactivate ProjectController
+    end
+
+    %% Delete Project (Only project leader can delete)
+    User->>ProjectController: Send DeleteProjectRequest(projectID)
+    activate ProjectController
+    ProjectController->>JWTService: Verify JWT Token and Extract Role
+    activate JWTService
+    JWTService-->>ProjectController: Return Role (e.g., "Project Leader")
+    deactivate JWTService
+    alt If User is Project Leader
+        ProjectController->>IProjectRepository: DeleteProject(projectID)
+        activate IProjectRepository
+        IProjectRepository->>ProjectRepository: DeleteProject(projectID)
+        activate ProjectRepository
+        ProjectRepository->>Database: Delete Project
+        activate Database
+        Database-->>ProjectRepository: Return Success (Project Deleted)
+        deactivate Database
+        ProjectRepository-->>IProjectRepository: Return Success
+        deactivate ProjectRepository
+        IProjectRepository-->>ProjectController: Return Success
+        deactivate IProjectRepository
+        ProjectController-->>User: Return Success("Project Deleted Successfully")
+        deactivate ProjectController
+    else
+        ProjectController-->>User: Return Error("Permission Denied: Only Project Leaders can delete projects")
+        deactivate ProjectController
+    end
+
+    %% Add Member to Project (Only project leader can add members)
+    User->>ProjectController: Send AddMemberRequest(projectID, memberID)
+    activate ProjectController
+    ProjectController->>JWTService: Verify JWT Token and Extract Role
+    activate JWTService
+    JWTService-->>ProjectController: Return Role (e.g., "Project Leader")
+    deactivate JWTService
+    alt If User is Project Leader
+        ProjectController->>IProjectRepository: AddMember(projectID, memberID)
+        activate IProjectRepository
+        IProjectRepository->>ProjectRepository: AddMember(projectID, memberID)
+        activate ProjectRepository
+        ProjectRepository->>Database: Add Member to Project
+        activate Database
+        Database-->>ProjectRepository: Return Success (Member Added)
+        deactivate Database
+        ProjectRepository-->>IProjectRepository: Return Success
+        deactivate ProjectRepository
+        IProjectRepository-->>ProjectController: Return Success
+        deactivate IProjectRepository
+        ProjectController-->>User: Return Success("Member Added Successfully")
+        deactivate ProjectController
+    else
+        ProjectController-->>User: Return Error("Permission Denied: Only Project Leaders can add members")
+        deactivate ProjectController
+    end
+
+    %% Define Member Role (Only project leader can define roles for members)
+    User->>ProjectController: Send EditMemberRoleRequest(projectID, memberID, newRole)
+    activate ProjectController
+    ProjectController->>JWTService: Verify JWT Token and Extract Role
+    activate JWTService
+    JWTService-->>ProjectController: Return Role (e.g., "Project Leader")
+    deactivate JWTService
+    alt If User is Project Leader
+        ProjectController->>IProjectRepository: EditMemberRole(projectID, memberID, newRole)
+        activate IProjectRepository
+        IProjectRepository->>ProjectRepository: EditMemberRole(projectID, memberID, newRole)
+        activate ProjectRepository
+        ProjectRepository->>Database: Update Member Role in Project
+        activate Database
+        Database-->>ProjectRepository: Return Success (Role Updated)
+        deactivate Database
+        ProjectRepository-->>IProjectRepository: Return Success
+        deactivate ProjectRepository
+        IProjectRepository-->>ProjectController: Return Success
+        deactivate IProjectRepository
+        ProjectController-->>User: Return Success("Member Role Updated Successfully")
+        deactivate ProjectController
+    else
+        ProjectController-->>User: Return Error("Permission Denied: Only Project Leaders can define roles")
+        deactivate ProjectController
+    end
+
+    %% Remove Member from Project (Only project leader can remove members)
+    User->>ProjectController: Send RemoveMemberRequest(projectID, memberID)
+    activate ProjectController
+    ProjectController->>JWTService: Verify JWT Token and Extract Role
+    activate JWTService
+    JWTService-->>ProjectController: Return Role (e.g., "Project Leader")
+    deactivate JWTService
+    alt If User is Project Leader
+        ProjectController->>IProjectRepository: RemoveMember(projectID, memberID)
+        activate IProjectRepository
+        IProjectRepository->>ProjectRepository: RemoveMember(projectID, memberID)
+        activate ProjectRepository
+        ProjectRepository->>Database: Remove Member from Project
+        activate Database
+        Database-->>ProjectRepository: Return Success (Member Removed)
+        deactivate Database
+        ProjectRepository-->>IProjectRepository: Return Success
+        deactivate ProjectRepository
+        IProjectRepository-->>ProjectController: Return Success
+        deactivate IProjectRepository
+        ProjectController-->>User: Return Success("Member Removed Successfully")
+        deactivate ProjectController
+    else
+        ProjectController-->>User: Return Error("Permission Denied: Only Project Leaders can remove members")
+        deactivate ProjectController
+    end
+
+    %% View Member Progress (Only project leader can view individual progress)
+    User->>ProjectController: Request ViewMemberProgress(projectID, memberID)
+    activate ProjectController
+    ProjectController->>JWTService: Verify JWT Token and Extract Role
+    activate JWTService
+    JWTService-->>ProjectController: Return Role (e.g., "Project Leader")
+    deactivate JWTService
+    alt If User is Project Leader
+        ProjectController->>IProjectRepository: ViewMemberProgress(projectID, memberID)
+        activate IProjectRepository
+        IProjectRepository->>ProjectRepository: GetMemberProgress(projectID, memberID)
+        activate ProjectRepository
+        ProjectRepository->>Database: Query Member Progress Data
+        activate Database
+        Database-->>ProjectRepository: Return Member Progress Data
+        deactivate Database
+        ProjectRepository-->>IProjectRepository: Return Member Progress Data
+        deactivate ProjectRepository
+        IProjectRepository-->>ProjectController: Return Member Progress Data
+        deactivate IProjectRepository
+        ProjectController-->>User: Return Member Progress Data
+        deactivate ProjectController
+    else
+        ProjectController-->>User: Return Error("Permission Denied: Only Project Leaders can view member progress")
+        deactivate ProjectController
+    end
+
+    %% Notes for additional clarity
+    note over User,ProjectController: User can perform multiple project management tasks,\nbut only project leaders can delete, add/remove members, define roles, and view progress.
+    note over ProjectController,IProjectRepository: Controller checks JWT token and verifies user role before performing sensitive operations.
+    note over JWTService: JWTService is responsible for verifying the token and extracting the user's role information from the token.
