@@ -1,0 +1,63 @@
+classDiagram
+
+    %% Dto Classes for Data Transfer Objects (Requests)
+    class CreateProjectDto {
+        +string ProjectName
+        +string ProjectDescription
+        +DateTime StartDate
+        +DateTime EndDate
+    }
+
+    class UpdateProjectDto {
+        +int ProjectID
+        +string ProjectName
+        +string ProjectDescription
+        +DateTime StartDate
+        +DateTime EndDate
+    }
+
+    %% Interfaces
+    class IProjectRepository {
+        +CreateProject(dto: CreateProjectDto)
+        +UpdateProject(dto: UpdateProjectDto)
+        +DeleteProject(projectID: int)
+        +GetProjectByID(projectID: int)
+        +GetAllProjects()
+        +ViewProjectList()
+        +ViewProjectDetails()
+        +SearchProject()
+        +AddMemberToProject()
+        +EditMemberRole()
+        +RemoveMember()
+        +ViewMemberProgress()
+    }
+
+    %% Repositories (Concrete Implementations)
+    class ProjectRepository {
+        +CreateProject(dto: CreateProjectDto)
+        +UpdateProject(dto: UpdateProjectDto)
+        +DeleteProject(projectID: int)
+        +GetProjectByID(projectID: int)
+        +GetAllProjects()
+    }
+
+    %% Controllers
+    class ProjectController {
+        +CreateProject(dto: CreateProjectDto)
+        +UpdateProject(dto: UpdateProjectDto)
+        +DeleteProject(projectID: int)
+        +ViewProjectDetails(projectID: int)
+        +SearchProjects(query: String)
+    }
+
+    %% Repositories Interface
+    IProjectRepository <|-- ProjectRepository : implements
+
+    %% Controllers call Repositories
+    ProjectController --> IProjectRepository : interacts with
+
+    %% Dtos are used by Controllers and Repositories
+    CreateProjectDto --> ProjectController : used by
+    CreateProjectDto --> IProjectRepository : used by
+    UpdateProjectDto --> ProjectController : used by
+    UpdateProjectDto --> IProjectRepository : used by
