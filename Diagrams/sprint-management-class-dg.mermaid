@@ -1,0 +1,89 @@
+classDiagram
+    %% Sprint Management Classes
+
+    %% Sprint model class in Models
+    class Sprint {
+        +int SprintID
+        +string SprintName
+        +string SprintDescription
+        +DateTime StartDate
+        +DateTime EndDate
+        +string Status  // Status could be 'Not Started', 'In Progress', 'Completed'
+        +int ProjectID  // Foreign key referencing the project
+    }
+
+    %% Data Transfer Objects (DTOs) for Sprint Operations
+    class CreateSprintDto {
+        +string SprintName
+        +string SprintDescription
+        +DateTime StartDate
+        +DateTime EndDate
+        +int ProjectID
+    }
+
+    class UpdateSprintDto {
+        +int SprintID
+        +string SprintName
+        +string SprintDescription
+        +DateTime StartDate
+        +DateTime EndDate
+        +string Status
+    }
+
+    class SprintStatusDto {
+        +int SprintID
+        +string Status  // 'In Progress', 'Completed', etc.
+    }
+
+    %% Sprint Repository Interface for database operations
+    class ISprintRepository {
+        +CreateSprint(dto: CreateSprintDto)
+        +UpdateSprint(dto: UpdateSprintDto)
+        +DeleteSprint(sprintID: int)
+        +GetSprintByID(sprintID: int)
+        +GetAllSprints(projectID: int)
+        +StartSprint(sprintID: int)
+        +EndSprint(sprintID: int)
+        +EditSprintStatus(dto: SprintStatusDto)
+    }
+
+    %% Concrete Sprint Repository (Implementing the Interface)
+    class SprintRepository {
+        +CreateSprint(dto: CreateSprintDto)
+        +UpdateSprint(dto: UpdateSprintDto)
+        +DeleteSprint(sprintID: int)
+        +GetSprintByID(sprintID: int)
+        +GetAllSprints(projectID: int)
+        +StartSprint(sprintID: int)
+        +EndSprint(sprintID: int)
+        +EditSprintStatus(dto: SprintStatusDto)
+    }
+
+    %% Sprint Controller for managing sprint-related requests
+    class SprintController {
+        +CreateSprint(dto: CreateSprintDto)
+        +UpdateSprint(dto: UpdateSprintDto)
+        +DeleteSprint(sprintID: int)
+        +ViewSprint(sprintID: int)
+        +GetAllSprints(projectID: int)
+        +StartSprint(sprintID: int)
+        +EndSprint(sprintID: int)
+        +EditSprintStatus(dto: SprintStatusDto)
+    }
+
+    %% SprintController calls ISprintRepository for CRUD operations
+    SprintController --> ISprintRepository : interacts with
+
+    %% ISprintRepository is implemented by SprintRepository
+    ISprintRepository <|-- SprintRepository : implements
+
+    %% DTOs are used by both the SprintController and SprintRepository
+    CreateSprintDto --> SprintController : used by
+    CreateSprintDto --> ISprintRepository : used by
+    UpdateSprintDto --> SprintController : used by
+    UpdateSprintDto --> ISprintRepository : used by
+    SprintStatusDto --> SprintController : used by
+    SprintStatusDto --> ISprintRepository : used by
+
+    %% Sprint model represents the Sprint in the database
+    Sprint "1" -- "0..*" SprintRepository : manages
