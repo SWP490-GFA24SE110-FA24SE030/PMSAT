@@ -1,0 +1,74 @@
+sequenceDiagram
+    actor User
+    actor ProjectLeader
+    actor ProjectMember
+    participant AuthService
+    participant SprintController
+    participant ISprintRepository
+    participant DatabaseContext
+
+    %% Login Process for 
+    User->>AuthService: Login(username, password)
+    activate AuthService
+    AuthService->>DatabaseContext: Validate User
+    activate DatabaseContext
+    DatabaseContext-->>AuthService: Return User Data
+    deactivate DatabaseContext
+    AuthService-->>User: Return JWT Token
+    deactivate AuthService
+
+    %% Project Member or Project Leader Starts/Ends Sprint
+    User->>SprintController: Start/End Sprint(sprintID) with JWT
+    activate SprintController
+    SprintController->>SprintController: Validate JWT (Role: Project Leader or Project Member)
+    SprintController->>ISprintRepository: Start/End Sprint
+    activate ISprintRepository
+    ISprintRepository->>DatabaseContext: Update Sprint Status
+    activate DatabaseContext
+    DatabaseContext-->>ISprintRepository: Success
+    deactivate DatabaseContext
+    ISprintRepository-->>SprintController: Success
+    deactivate ISprintRepository
+    SprintController-->>ProjectMember: Sprint Started/Ended
+    SprintController-->>ProjectLeader: Sprint Started/Ended
+    deactivate SprintController
+
+
+    %% Project Member or Project Leader Edits Sprint Status
+    User->>SprintController: Edit Sprint Status(SprintStatusDto) with JWT
+    activate SprintController
+    SprintController->>SprintController: Validate JWT (Role: Project Leader or Project Member)
+    SprintController->>ISprintRepository: Edit Sprint Status
+    activate ISprintRepository
+    ISprintRepository->>DatabaseContext: Update Sprint Status
+    activate DatabaseContext
+    DatabaseContext-->>ISprintRepository: Success
+    deactivate DatabaseContext
+    ISprintRepository-->>SprintController: Success
+    deactivate ISprintRepository
+    SprintController-->>ProjectMember: Sprint Status Updated
+    SprintController-->>ProjectLeader: Sprint Status Updated
+    deactivate SprintController
+
+
+    %% Project Leader Deletes Sprint
+    ProjectLeader->>SprintController: Delete Sprint(sprintID) with JWT
+    activate SprintController
+    SprintController->>SprintController: Validate JWT (Role: Project Leader)
+    SprintController->>ISprintRepository: Delete Sprint
+    activate ISprintRepository
+    ISprintRepository->>DatabaseContext: Delete Sprint
+    activate DatabaseContext
+    DatabaseContext-->>ISprintRepository: Success
+    deactivate DatabaseContext
+    ISprintRepository-->>SprintController: Success
+    deactivate ISprintRepository
+    SprintController-->>ProjectLeader: Sprint Deleted
+    deactivate SprintController
+
+    %% Project Member Tries to Delete Sprint (Permission Denied)
+    ProjectMember->>SprintController: Try to Delete Sprint(sprintID) with JWT
+    activate SprintController
+    SprintController->>SprintController: Validate JWT (Role: Project Member)
+    SprintController-->>ProjectMember: Permission Denied
+    deactivate SprintController
