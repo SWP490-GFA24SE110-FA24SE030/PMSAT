@@ -60,5 +60,23 @@ namespace api.Controllers
 
             return CreatedAtAction(nameof(GetById), new {id = taskModel}, taskModel.ToTaskDto());
         }
+
+        [HttpPost("assign")]
+        public async Task<IActionResult> AssignTaskToMember([FromBody] AssignTaskToMemberDto taskAssignment)
+        {
+            if (taskAssignment == null)
+            {
+                return BadRequest("Invalid data.");
+            }
+            var resultMessage= await _taskRepo.AssignTaskToMemberAsync(taskAssignment);
+            if (resultMessage == "Success")
+            {
+                return Ok(new { message = "Task assigned successfully." });
+            }
+            else
+            {
+                return BadRequest(new { message = resultMessage });
+            }
+        }
     }
 }
