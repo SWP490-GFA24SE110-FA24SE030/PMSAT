@@ -20,7 +20,7 @@ namespace api.Controllers
             _projectRepo = projectRepo;
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<IActionResult> GetAll() 
         {
             var projects = await _projectRepo.GetAllAsync(); 
@@ -30,7 +30,7 @@ namespace api.Controllers
             return Ok(projectDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("prjid={id}")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             var project = await _projectRepo.GetByIdAsync(id);
@@ -43,7 +43,7 @@ namespace api.Controllers
             return Ok(project.ToProjectDto());
         }
 
-        [HttpPost]
+        [HttpPost("new")]
         public async Task<IActionResult> Create([FromBody] CreateProjectRequestDto projectDto) 
         {
             var projectModel = projectDto.ToProjectFromCreateDto();
@@ -54,7 +54,7 @@ namespace api.Controllers
         }
 
         [HttpPut]
-        [Route("edit/{id}")]
+        [Route("edit/prjid={id}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateProjectRequestDto updateProjectRequestDto)
         {
             var projectModel = await _projectRepo.UpdateByIdAsync(id, updateProjectRequestDto);
@@ -66,7 +66,7 @@ namespace api.Controllers
             return Ok();
         }
         [HttpDelete]
-        [Route("delete/{id}")]
+        [Route("delete/prjid={id}")]
         public async Task<IActionResult> DeleteByIdAsync([FromRoute] Guid id)
         {
             var projectModel = await _projectRepo.DeleteByIdAsync(id);
