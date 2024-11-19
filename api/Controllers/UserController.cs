@@ -23,7 +23,7 @@ namespace api.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<IActionResult> GetAll() 
         {
             var users = await _userRepo.GetAllAsync();
@@ -33,7 +33,7 @@ namespace api.Controllers
             return Ok(users);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("uid={id}")]
         public async Task<IActionResult> GetById([FromRoute] Guid id) 
         {
             var user = await _userRepo.GetByIdAsync(id);
@@ -46,7 +46,7 @@ namespace api.Controllers
             return Ok(user.ToUserDto());
         }
 
-        [HttpPost]
+        [HttpPost("new")]
         public async Task<IActionResult> Create([FromBody] CreateUserRequestDto userDto)
         {
             var userModel = userDto.ToUserFromCreateDTO();
@@ -55,7 +55,7 @@ namespace api.Controllers
         }
 
         [HttpPut]
-        [Route("{id}")]
+        [Route("update/uid={id}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateUserRequestDto updateDto)
         {
             var userModel = await _userRepo.UpdateAsync(id, updateDto);
@@ -71,7 +71,7 @@ namespace api.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}")]
+        [Route("delete/uid={id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id) 
         {
             var userModel = await _userRepo.DeleteAsync(id);
