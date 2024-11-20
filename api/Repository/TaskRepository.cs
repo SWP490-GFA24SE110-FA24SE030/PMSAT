@@ -23,7 +23,7 @@ namespace api.Repository
         {
             // Validate if the current user is a Project Leader
             var leader = await _context.ProjectMembers.FirstOrDefaultAsync(
-                pm => pm.UserId == assignTaskToMemberDto.LeaderID
+                pm => pm.Id == assignTaskToMemberDto.LeaderID
                 && pm.Role == "Leader");
             if (leader == null)
             {
