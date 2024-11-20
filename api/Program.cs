@@ -22,6 +22,7 @@ builder.Services.AddDbContext<PmsatContext>(options =>
 builder.Services.AddScoped<IUserRepository, UserRepostiory>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddScoped<IProjectMemberRepository, ProjectMemberRepository>();
 
 
 var app = builder.Build();
