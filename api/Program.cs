@@ -1,7 +1,11 @@
+using System.Text;
 using api.Interfaces;
 using api.Models;
 using api.Repository;
+using api.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +43,7 @@ builder.Services.AddScoped<IUserRepository, UserRepostiory>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<IProjectMemberRepository, ProjectMemberRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 
 var app = builder.Build();
