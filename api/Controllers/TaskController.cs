@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using api.Dtos.Task;
 using api.Interfaces;
 using api.Mappers;
+using api.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -15,11 +16,13 @@ namespace api.Controllers
     {
         private readonly ITaskRepository _taskRepo;
         private readonly IProjectRepository _projectRepo;
-        
-        public TaskController(ITaskRepository taskRepo, IProjectRepository projectRepo)
+        private readonly IWorkFlowRepository _workflowRepo;
+
+        public TaskController(ITaskRepository taskRepo, IProjectRepository projectRepo, IWorkFlowRepository workflowRepo)
         {
             _taskRepo = taskRepo;
             _projectRepo = projectRepo;
+            _workflowRepo = workflowRepo;
         }
 
         [HttpGet]
@@ -54,9 +57,25 @@ namespace api.Controllers
                 return BadRequest("Project does not exist!");
             }
 
+            // Create the Task entity from the DTO
             var taskModel = taskDto.ToTaskFromCreate(projectId);
 
+            // Save the Task entity
             await _taskRepo.CreateAsync(taskModel);
+
+            // Create an initial Workflow entry for the task
+            var workflowModel = new Workflow
+            {
+                Id = Guid.NewGuid(),
+                OldStatus = "default",
+                CurrentStatus = "To-Do",
+                NewStatus = "To-Do",
+                UpdatedAt = DateTime.Now,
+                TaskId = taskModel.Id,
+            };
+
+            // Save the Workflow entity
+            await _workflowRepo.CreateAsync(workflowModel);
 
             return CreatedAtAction(nameof(GetById), new {id = taskModel}, taskModel.ToTaskDto());
         }
