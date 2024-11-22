@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using api.Dtos.AuthDto;
 using api.Dtos.LoginDto;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +48,42 @@ namespace api.Services
             Name = user.Name,
             Email = user.Email,
             Role = user.Role
+        };
+    }
+
+    public async Task<RegisterResponse> Register(RegisterRequest request)
+    {
+        var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+        if (existingUser != null)
+        {
+            throw new Exception("Email is already registered");
+        }
+
+        var newUser = new User
+        {
+            Name = request.Name,
+            Email = request.Email,
+            Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
+            Role = "User",
+            Status = "Active"
+        };
+
+        _context.Users.Add(newUser);
+        await _context.SaveChangesAsync();
+
+        var loginResponse = await Login(new LoginRequest
+        {
+            Email = request.Email,
+            Password = request.Password
+        });
+
+        return new RegisterResponse
+        {
+            Id = Guid.NewGuid(),
+            Token = loginResponse.Token,
+            Name = newUser.Name,
+            Email = newUser.Email,
+            Role = newUser.Role
         };
     }
 
