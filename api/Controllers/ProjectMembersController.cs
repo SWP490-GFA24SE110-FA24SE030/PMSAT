@@ -15,27 +15,15 @@ namespace api.Controllers
             _projectMemberRepository = projectMemberRepository;
         }
 
-        [HttpPost("add")]
-        public async Task<IActionResult> AddProjectMember([FromBody] ProjectMemberDto projectMemberDto)
+        [HttpPost("prjid={projectId}/add")]
+        public async Task<IActionResult> AddProjectMember([FromRoute] Guid projectId, [FromBody] ProjectMemberDto projectMemberDto)
         {
-            var success = await _projectMemberRepository.AddProjectMemberAsync(projectMemberDto);
+            var success = await _projectMemberRepository.AddProjectMemberAsync(projectId, projectMemberDto);
 
             if (!success)
-                return BadRequest(new { message = "Failed to add project member." });
+                return BadRequest(new { message = "Failed to add project member. Ensure the user exists and the project ID is valid." });
 
             return Ok(new { message = "Project member added successfully." });
-        }
-
-        [HttpGet("prjid={projectId}/members")]
-        public async Task<IActionResult> GetProjectMembers([FromRoute] Guid projectId)
-        {
-            // Get all project members
-            var members = await _projectMemberRepository.GetProjectMembersAsync(projectId);
-
-            if (members == null || !members.Any())
-                return NotFound(new { message = "No project members found." });
-
-            return Ok(members);
         }
     }
 }

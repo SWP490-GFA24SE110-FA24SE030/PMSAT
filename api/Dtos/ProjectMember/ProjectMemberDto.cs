@@ -1,9 +1,11 @@
-﻿namespace api.Dtos.ProjectMember
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace api.Dtos.ProjectMember
 {
     public class ProjectMemberDto
     {
-        public Guid UserId { get; set; }
-        public Guid ProjectId { get; set; }
+        [EmailAddress(ErrorMessage = "Invalid email format.")]
+        public required string Email { get; set; }
         public required string Role { get; set; }
     }
 }

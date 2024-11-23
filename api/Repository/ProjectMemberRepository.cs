@@ -14,12 +14,16 @@ namespace api.Repository
             _context = context;
         }
 
-        public async Task<bool> AddProjectMemberAsync(ProjectMemberDto projectMemberDto)
+        public async Task<bool> AddProjectMemberAsync(Guid projectId, ProjectMemberDto projectMemberDto)
         {
-            // Check if the user and project exist in the database
-            var userExists = await _context.Users.AnyAsync(u => u.Id == projectMemberDto.UserId);
-            var projectExists = await _context.Projects.AnyAsync(p => p.Id == projectMemberDto.ProjectId);
-            if (!userExists || !projectExists)
+            // Check if the project exists
+            var projectExists = await _context.Projects.AnyAsync(p => p.Id == projectId);
+            if (!projectExists)
+                return false;
+
+            // Find the user by email
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == projectMemberDto.Email);
+            if (user == null)
                 return false;
 
             // Create a new ProjectMember entity
@@ -27,27 +31,14 @@ namespace api.Repository
             {
                 Id = Guid.NewGuid(),
                 Role = projectMemberDto.Role,
-                UserId = projectMemberDto.UserId,
-                ProjectId = projectMemberDto.ProjectId
+                UserId = user.Id, // Set the UserId from the found user
+                ProjectId = projectId
             };
 
-            // Add to the database
+            // Add the new project member to the database
             _context.ProjectMembers.Add(projectMember);
             await _context.SaveChangesAsync();
             return true;
-        }
-
-        public async Task<IEnumerable<ProjectMemberDto>> GetProjectMembersAsync(Guid projectId)
-        {
-            return await _context.ProjectMembers
-                .Where(pm => pm.ProjectId == projectId) // Filter by project ID
-                .Select(pm => new ProjectMemberDto
-                {
-                    UserId = pm.Id,
-                    ProjectId = projectId,
-                    Role = pm.Role,
-                })
-                .ToListAsync();
         }
     }
 }
