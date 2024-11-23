@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Dtos.Project;
@@ -63,6 +64,14 @@ namespace api.Repository
         public async Task<Project?> GetByIdAsync(Guid id)
         {
             return await _context.Projects.Include(t => t.TaskPs).FirstOrDefaultAsync(i => i.Id == id);
+        }
+
+        public async Task<List<Project>> GetByTitleAsync(string title)
+        {
+            // Ensure case-insensitive search
+            return await _context.Projects
+                .Where(p => EF.Functions.Like(p.Title, $"%{title}%"))
+                .ToListAsync();
         }
 
         public Task<bool> ProjectExist(Guid id)

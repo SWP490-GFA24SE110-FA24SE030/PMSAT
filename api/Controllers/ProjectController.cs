@@ -6,6 +6,7 @@ using api.Dtos.Project;
 using api.Interfaces;
 using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace api.Controllers
 {
@@ -41,6 +42,31 @@ namespace api.Controllers
             }
 
             return Ok(project.ToProjectDto());
+        }
+
+        [HttpGet("title={title}")]
+        public async Task<IActionResult> GetByTitle([FromRoute] string title)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                return BadRequest("Project title cannot be empty.");
+            }
+
+            try
+            {
+                var project = await _projectRepo.GetByTitleAsync(title);
+
+                if (!project.Any())
+                {
+                    return NotFound($"Project with title '{title}' not found.");
+                }
+
+                return Ok(project);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An internal server error occurred.");
+            }
         }
 
         [HttpPost("new")]

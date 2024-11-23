@@ -16,5 +16,6 @@ namespace api.Interfaces
         Task<Project> DeleteByIdAsync(Guid id);
         Task<List<Project>> DeleteAllAsync();
         Task<bool> ProjectExist(Guid id);
+        Task<List<Project>> GetByTitleAsync(string title);
     }
 }
