@@ -4,7 +4,6 @@ namespace api.Interfaces
 {
     public interface IProjectMemberRepository
     {
-        Task<bool> AddProjectMemberAsync(ProjectMemberDto projectMemberDto);
-        Task<IEnumerable<ProjectMemberDto>> GetProjectMembersAsync(Guid projectId);
+        Task<bool> AddProjectMemberAsync(Guid projectId, ProjectMemberDto projectMemberDto);
     }
 }

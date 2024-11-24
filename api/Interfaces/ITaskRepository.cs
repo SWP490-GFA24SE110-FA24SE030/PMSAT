@@ -13,6 +13,6 @@ namespace api.Interfaces
         Task<List<TaskP>> GetAllAsync();
         Task<TaskP> GetByIdAsync(Guid id);
         Task<TaskP> CreateAsync(TaskP taskModel);
-        Task<string> AssignTaskToMemberAsync(AssignTaskToMemberDto assignTaskToMemberDto);
+        Task<string> AssignTaskToMemberAsync(Guid leaderId, Guid taskId, string email);
     }
 }

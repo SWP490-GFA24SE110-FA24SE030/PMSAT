@@ -108,22 +108,16 @@ namespace api.Controllers
             return Ok(new { Message = "Task status updated successfully.", Workflow = newWorkflow });
         }
 
-        [HttpPost("assign")]
-        public async Task<IActionResult> AssignTaskToMember([FromBody] AssignTaskToMemberDto taskAssignment)
+        [HttpPost("LeaderID={leaderId}/assign/TaskID={taskId}")]
+        public async Task<IActionResult> AssignTaskToMember([FromRoute] Guid leaderId, [FromRoute] Guid taskId, [FromBody] AssignTaskToMemberDto taskAssignment)
         {
-            if (taskAssignment == null)
-            {
-                return BadRequest("Invalid data.");
-            }
-            var resultMessage= await _taskRepo.AssignTaskToMemberAsync(taskAssignment);
+            var resultMessage = await _taskRepo.AssignTaskToMemberAsync(leaderId, taskId, taskAssignment.Email);
+
             if (resultMessage == "Success")
             {
                 return Ok(new { message = "Task assigned successfully." });
             }
-            else
-            {
-                return BadRequest(new { message = resultMessage });
-            }
+            return BadRequest(new { message = resultMessage });
         }
     }
 }
