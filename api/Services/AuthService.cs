@@ -61,6 +61,7 @@ namespace api.Services
 
         var newUser = new User
         {
+            Id = Guid.NewGuid(),
             Name = request.Name,
             Email = request.Email,
             Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
@@ -69,7 +70,16 @@ namespace api.Services
         };
 
         _context.Users.Add(newUser);
-        await _context.SaveChangesAsync();
+        
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+        {
+            Console.WriteLine(ex.InnerException?.Message);
+        }
 
         var loginResponse = await Login(new LoginRequest
         {
@@ -79,7 +89,7 @@ namespace api.Services
 
         return new RegisterResponse
         {
-            Id = Guid.NewGuid(),
+            Id = newUser.Id,
             Token = loginResponse.Token,
             Name = newUser.Name,
             Email = newUser.Email,
