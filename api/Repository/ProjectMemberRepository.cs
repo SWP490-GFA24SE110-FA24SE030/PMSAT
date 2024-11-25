@@ -14,7 +14,7 @@ namespace api.Repository
             _context = context;
         }
 
-        public async Task<bool> AddProjectMemberAsync(Guid projectId, ProjectMemberDto projectMemberDto)
+        public async Task<bool> AddProjectMemberAsync(Guid projectId, AddProjectMemberRequest projectMemberDto)
         {
             // Check if the project exists
             var projectExists = await _context.Projects.AnyAsync(p => p.Id == projectId);

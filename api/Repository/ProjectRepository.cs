@@ -58,12 +58,18 @@ namespace api.Repository
 
         public async Task<List<Project>> GetAllAsync()
         {
-            return await _context.Projects.Include(t => t.TaskPs).ToListAsync();
+            return await _context.Projects
+                .Include(t => t.TaskPs)
+                .Include(pm => pm.ProjectMembers)
+                .ToListAsync();
         }
 
         public async Task<Project?> GetByIdAsync(Guid id)
         {
-            return await _context.Projects.Include(t => t.TaskPs).FirstOrDefaultAsync(i => i.Id == id);
+            return await _context.Projects
+                .Include(t => t.TaskPs)
+                .Include(pm => pm.ProjectMembers)
+                .FirstOrDefaultAsync(i => i.Id == id);
         }
 
         public async Task<List<Project>> GetByTitleAsync(string title)

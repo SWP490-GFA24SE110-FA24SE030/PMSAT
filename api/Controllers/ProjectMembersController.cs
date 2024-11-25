@@ -16,7 +16,7 @@ namespace api.Controllers
         }
 
         [HttpPost("prjid={projectId}/add")]
-        public async Task<IActionResult> AddProjectMember([FromRoute] Guid projectId, [FromBody] ProjectMemberDto projectMemberDto)
+        public async Task<IActionResult> AddProjectMember([FromRoute] Guid projectId, [FromBody] AddProjectMemberRequest projectMemberDto)
         {
             var success = await _projectMemberRepository.AddProjectMemberAsync(projectId, projectMemberDto);
 
