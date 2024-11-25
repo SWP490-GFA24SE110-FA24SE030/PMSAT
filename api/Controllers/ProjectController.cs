@@ -31,6 +31,30 @@ namespace api.Controllers
             return Ok(projectDto);
         }
 
+        [HttpGet("uid={userId}/all")]
+        public async Task<IActionResult> GetProjectsByUserId([FromRoute] Guid userId)
+        {
+            try
+            {
+                var projects = await _projectRepo.GetAllProjectsByUserIdAsync(userId);
+
+                if (!projects.Any())
+                {
+                    return NotFound(new { message = "No projects found for the user." });
+                }
+
+                return Ok(projects);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while fetching projects.", error = ex.Message });
+            }
+        }
+
         [HttpGet("prjid={id}")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
@@ -69,14 +93,33 @@ namespace api.Controllers
             }
         }
 
-        [HttpPost("new")]
-        public async Task<IActionResult> Create([FromBody] CreateProjectRequestDto projectDto) 
+        //[HttpPost("new")]
+        //public async Task<IActionResult> Create([FromBody] CreateProjectRequestDto projectDto) 
+        //{
+        //    var projectModel = projectDto.ToProjectFromCreateDto();
+
+        //    await _projectRepo.CreateAsync(projectModel);
+
+        //    return CreatedAtAction(nameof(GetById), new { id = projectModel.Id}, projectModel.ToProjectDto());
+        //}
+
+        [HttpPost("uid={userId}/new")]
+        public async Task<IActionResult> CreateProject([FromRoute] Guid userId, [FromBody] CreateProjectRequestDto createProjectDto)
         {
-            var projectModel = projectDto.ToProjectFromCreateDto();
+            try
+            {
+                var newProjectId = await _projectRepo.CreateProjectAsync(userId, createProjectDto);
 
-            await _projectRepo.CreateAsync(projectModel);
-
-            return CreatedAtAction(nameof(GetById), new { id = projectModel.Id}, projectModel.ToProjectDto());
+                return CreatedAtAction(nameof(GetById), new { id = newProjectId }, new { message = "Project created successfully.", projectId = newProjectId });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while creating the project.", error = ex.Message });
+            }
         }
 
         [HttpPut]
