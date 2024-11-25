@@ -40,5 +40,22 @@ namespace api.Repository
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<List<ProjectMember>> GetProjectMembersFromProjectAsync(Guid projectId)
+        {
+            var projectExists = await _context.Projects.AnyAsync(p => p.Id == projectId);
+            if (!projectExists)
+            {
+                throw new ArgumentException("Project does not exist.");
+            }
+
+            // Fetch all members associated with the project
+            var projectMembers = await _context.ProjectMembers
+                .Where(pm => pm.ProjectId == projectId)
+                .Include(pm => pm.User) // Include related User information if needed
+                .ToListAsync();
+
+            return projectMembers;
+        }
     }
 }
