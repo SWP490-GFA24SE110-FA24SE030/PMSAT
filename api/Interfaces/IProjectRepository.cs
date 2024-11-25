@@ -10,6 +10,7 @@ namespace api.Interfaces
     public interface IProjectRepository
     {
         Task<List<Project>> GetAllAsync();
+        Task<List<Project>> GetAllProjectsByUserIdAsync(Guid userId);
         Task<Project?> GetByIdAsync(Guid id);
         Task<Project> CreateAsync(Project projectModel);
         Task<Guid> CreateProjectAsync(Guid userId, CreateProjectRequestDto createProjectDto);

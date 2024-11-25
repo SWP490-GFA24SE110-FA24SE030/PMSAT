@@ -31,6 +31,30 @@ namespace api.Controllers
             return Ok(projectDto);
         }
 
+        [HttpGet("uid={userId}/all")]
+        public async Task<IActionResult> GetProjectsByUserId([FromRoute] Guid userId)
+        {
+            try
+            {
+                var projects = await _projectRepo.GetAllProjectsByUserIdAsync(userId);
+
+                if (!projects.Any())
+                {
+                    return NotFound(new { message = "No projects found for the user." });
+                }
+
+                return Ok(projects);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while fetching projects.", error = ex.Message });
+            }
+        }
+
         [HttpGet("prjid={id}")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {

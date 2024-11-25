@@ -103,6 +103,23 @@ namespace api.Repository
                 .ToListAsync();
         }
 
+        public async Task<List<Project>> GetAllProjectsByUserIdAsync(Guid userId)
+        {
+            var userExists = await _context.Users.AnyAsync(u => u.Id == userId);
+            if (!userExists)
+            {
+                throw new ArgumentException("User does not exist.");
+            }
+
+            // Query projects associated with the user through the ProjectMember table
+            var projectMembers = await _context.ProjectMembers
+                .Where(pm => pm.UserId == userId)
+                .Include(pm => pm.Project) // Include the associated Project
+                .ToListAsync();
+
+            return projectMembers.Select(pm => pm.Project).ToList();
+        }
+
         public async Task<Project?> GetByIdAsync(Guid id)
         {
             return await _context.Projects
