@@ -77,6 +77,21 @@ namespace api.Repository
             return await _context.TaskPs.FindAsync(id);
         }
 
-        
+        public async Task<List<TaskP>> GetTasksFromProjectAsync(Guid projectId)
+        {
+            // Validate if the project exists
+            var projectExists = await _context.Projects.AnyAsync(p => p.Id == projectId);
+            if (!projectExists)
+            {
+                throw new ArgumentException("Project does not exist.");
+            }
+
+            // Fetch all tasks related to the project
+            var tasks = await _context.TaskPs
+                .Where(t => t.ProjectId == projectId)
+                .ToListAsync();
+
+            return tasks;
+        }
     }
 }

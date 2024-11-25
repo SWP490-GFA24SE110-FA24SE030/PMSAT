@@ -49,6 +49,28 @@ namespace api.Controllers
 
         }
 
+        [HttpGet("getTasksFromProject/prjid={projectId}")]
+        public async Task<IActionResult> GetTasksFromProject([FromRoute] Guid projectId)
+        {
+            try
+            {
+                var tasks = await _taskRepo.GetTasksFromProjectAsync(projectId);
+
+                // Convert the tasks to DTOs if needed before returning (optional)
+                var taskDtos = tasks.Select(t => t.ToTaskDto()).ToList();
+
+                return Ok(tasks);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while retrieving tasks.", error = ex.Message });
+            }
+        }
+
         [HttpPost("{projectId}")]
         public async Task<IActionResult> Create([FromRoute] Guid projectId, CreateTaskDto taskDto)
         {
