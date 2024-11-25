@@ -9,8 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
-    [Route("api/project")]
     [ApiController]
+    [Route("api/project")]
+    
     public class ProjectController : ControllerBase
     {
         private readonly IProjectRepository _projectRepo;

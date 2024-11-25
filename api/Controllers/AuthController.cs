@@ -15,41 +15,41 @@ namespace api.Controllers
     {
         private readonly IAuthService _authService;
 
-    public AuthController(IAuthService authService)
-    {
-        _authService = authService;
-    }
+        public AuthController(IAuthService authService)
+        {
+            _authService = authService;
+        }
 
-    [HttpPost("login")]
-    public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
-    {
-        try
+        [HttpPost("login")]
+        public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
         {
-            var response = await _authService.Login(request);
-            return Ok(response);
+            try
+            {
+                var response = await _authService.Login(request);
+                return Ok(response);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "An error occurred while processing your request." });
+            }
         }
-        catch (UnauthorizedAccessException ex)
-        {
-            return Unauthorized(new { message = ex.Message });
-        }
-        catch (Exception)
-        {
-            return StatusCode(500, new { message = "An error occurred while processing your request." });
-        }
-    }
 
-    [HttpPost("register")]
-    public async Task<ActionResult<RegisterResponse>> Register(RegisterRequest request)
-    {
-        try
+        [HttpPost("register")]
+        public async Task<ActionResult<RegisterResponse>> Register(RegisterRequest request)
         {
-            var response = await _authService.Register(request);
-            return Ok(response);
+            try
+            {
+                var response = await _authService.Register(request);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
-        catch (Exception ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
-    }
     }
 }
