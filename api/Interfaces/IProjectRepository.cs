@@ -12,6 +12,7 @@ namespace api.Interfaces
         Task<List<Project>> GetAllAsync();
         Task<Project?> GetByIdAsync(Guid id);
         Task<Project> CreateAsync(Project projectModel);
+        Task<Guid> CreateProjectAsync(Guid userId, CreateProjectRequestDto createProjectDto);
         Task<Project?> UpdateByIdAsync(Guid id, UpdateProjectRequestDto projectDto);
         Task<Project> DeleteByIdAsync(Guid id);
         Task<List<Project>> DeleteAllAsync();

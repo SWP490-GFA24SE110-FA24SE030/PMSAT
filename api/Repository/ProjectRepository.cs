@@ -25,6 +25,45 @@ namespace api.Repository
             return projectModel;
         }
 
+        public async Task<Guid> CreateProjectAsync(Guid userId, CreateProjectRequestDto createProjectDto)
+        {
+            // Check if the user exists
+            var userExists = await _context.Users.AnyAsync(u => u.Id == userId);
+            if (!userExists)
+            {
+                throw new ArgumentException("User does not exist.");
+            }
+
+            // Create a new project
+            var newProject = new Project
+            {
+                Id = Guid.NewGuid(),
+                Title = createProjectDto.Title,
+                Description = createProjectDto.Description,
+                CreatedAt = DateTime.Now,
+                Status = "Active"
+            };
+
+            // Add the project to the database
+            _context.Projects.Add(newProject);
+            await _context.SaveChangesAsync();
+
+            // Create a new ProjectMember entry for the user (who created project) as the Leader
+            var newProjectMember = new ProjectMember
+            {
+                Id = Guid.NewGuid(),
+                Role = "Leader",
+                UserId = userId,
+                ProjectId = newProject.Id
+            };
+
+            // Add the project member to the database
+            _context.ProjectMembers.Add(newProjectMember);
+            await _context.SaveChangesAsync();
+
+            return newProject.Id;
+        }
+
         public async Task<List<Project>> DeleteAllAsync()
         {
             // Get all projects
