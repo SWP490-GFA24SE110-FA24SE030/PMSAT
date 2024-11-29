@@ -24,5 +24,10 @@ namespace api.Repository
             await _context.SaveChangesAsync();
             return sprintModel;
         }
+
+        public async Task<Sprint> GetByIdAsync(Guid id)
+        {
+            return await _context.Sprints.FindAsync(id);
+        }
     }
 }

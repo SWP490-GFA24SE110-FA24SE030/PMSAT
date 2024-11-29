@@ -10,5 +10,6 @@ namespace api.Interfaces
     public interface ISprintRepository
     {
         public Task<Sprint> CreateAsync(Sprint sprintModel);
+        public Task<Sprint> GetByIdAsync(Guid id);
     }
 }
