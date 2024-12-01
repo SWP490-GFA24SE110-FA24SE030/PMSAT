@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using api.Dtos.Sprint;
 using api.Interfaces;
 using api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Repository
 {
@@ -25,9 +26,24 @@ namespace api.Repository
             return sprintModel;
         }
 
-        public async Task<Sprint> GetByIdAsync(Guid id)
+        public async Task<List<Sprint>> GetAllAsync()
         {
+            return await _context.Sprints.ToListAsync();
+        }
+
+        public async Task<Sprint?> GetByIdAsync(Guid id)
+        {
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentException("Invalid Guid provided", nameof(id));
+            }
+
             return await _context.Sprints.FindAsync(id);
+        }
+
+        public async Task<Sprint> GetByNameAsync(string sprintName)
+        {
+            return await _context.Sprints.FirstOrDefaultAsync(x => x.Name == sprintName);
         }
     }
 }
