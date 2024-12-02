@@ -11,6 +11,7 @@ namespace api.Interfaces
     public interface ITaskSprintRepository
     {
         public Task<List<TaskP>> GetSprintTask(Sprint sprint);
+        public Task<TaskSprint> Create(TaskSprint taskSprint);
 
 
     }

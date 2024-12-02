@@ -16,6 +16,15 @@ namespace api.Repository
         {
             _context = context;   
         }
+
+        public async Task<TaskSprint> Create(TaskSprint taskSprintModel)
+        {
+            await _context.TaskSprints.AddAsync(taskSprintModel);
+            await _context.SaveChangesAsync();
+            return taskSprintModel;
+            
+        }
+
         public async Task<List<TaskP>> GetSprintTask(Sprint sprint)
         {
             return await _context.TaskSprints.Where(x => x.SprintId == sprint.Id)
