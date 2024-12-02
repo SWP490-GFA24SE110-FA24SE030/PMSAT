@@ -37,5 +37,17 @@ namespace api.Repository
                 EndDate = task.Task.EndDate
             }).ToListAsync();
         }
+
+        public async Task<TaskSprint> RemoveTask(TaskP task, Guid sprintId)
+        {
+            var taskModel    = await _context.TaskSprints.FirstOrDefaultAsync(x => x.Task == task && x.SprintId == sprintId);
+            if (taskModel == null) 
+            {
+                return null;
+            }
+            _context.Remove(taskModel);
+            await _context.SaveChangesAsync();
+            return taskModel;
+        }
     }
 }

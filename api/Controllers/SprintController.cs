@@ -100,7 +100,24 @@ namespace api.Controllers
 
             return Ok(taskSprintModel);
             
-        }       
+        }   
+
+        [HttpDelete("RemoveTaskFromSprint")]
+        public async Task<IActionResult> RemoveTaskFromSprint(Guid sprintId, Guid taskId)
+        {
+            var sprint = await _sprintRepo.GetByIdAsync(sprintId);
+            if (sprint == null)
+                return BadRequest("Sprint not found");
+
+            var taskSprint = sprint.TaskSprints.FirstOrDefault(ts => ts.TaskId == taskId);
+            if (taskSprint == null)
+                return BadRequest("Task is not assigned to this sprint");
+                
+            var taskModel = await _taskRepo.GetByIdAsync(taskId);
+            await _taskSprintRepo.RemoveTask(taskModel, sprintId);
+            
+            return Ok(taskModel);
+        }    
 
 
 

@@ -12,6 +12,7 @@ namespace api.Interfaces
     {
         public Task<List<TaskP>> GetSprintTask(Sprint sprint);
         public Task<TaskSprint> Create(TaskSprint taskSprint);
+        public Task<TaskSprint> RemoveTask(TaskP task, Guid sprintId);
 
 
     }
