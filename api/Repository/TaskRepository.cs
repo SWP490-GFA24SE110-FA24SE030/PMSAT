@@ -89,6 +89,7 @@ namespace api.Repository
             // Fetch all tasks related to the project
             var tasks = await _context.TaskPs
                 .Where(t => t.ProjectId == projectId)
+                .Include(t => t.Workflows) // to display task's status workflows
                 .ToListAsync();
 
             return tasks;

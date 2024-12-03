@@ -29,8 +29,8 @@ namespace api.Mappers
                 Id = Guid.NewGuid(),
                 Type = taskDto.Type,
                 Description = taskDto.Description,
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now,
+                StartDate = taskDto.StartDate,
+                EndDate = taskDto.EndDate,
                 ProjectId = projectId
             };
         }
