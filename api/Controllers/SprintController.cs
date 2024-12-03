@@ -88,8 +88,11 @@ namespace api.Controllers
             if (task == null)
                 return BadRequest("Task not found");
             
+            var taskSprintModel = sprint.TaskSprints.FirstOrDefault(ts => ts.TaskId == taskId);
+            if (taskSprintModel != null)
+                return BadRequest("Task is already assigned to this sprint");
             
-            var taskSprintModel = new TaskSprint
+            taskSprintModel = new TaskSprint
             {
                 Id = Guid.NewGuid(),
                 SprintId = sprint.Id,
