@@ -74,7 +74,12 @@ namespace api.Repository
 
         public async Task<TaskP> GetByIdAsync(Guid id)
         {
-            return await _context.TaskPs.FindAsync(id);
+            var task = await _context.TaskPs
+                    .Where(t => t.Id == id)
+                    .Include(t => t.Workflows)
+                    .Include(t => t.Issues)
+                    .FirstOrDefaultAsync();
+            return task;
         }
 
         public async Task<List<TaskP>> GetTasksFromProjectAsync(Guid projectId)
