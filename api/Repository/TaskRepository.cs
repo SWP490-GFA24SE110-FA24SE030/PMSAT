@@ -69,7 +69,11 @@ namespace api.Repository
 
         public async Task<List<TaskP>> GetAllAsync()
         {
-            return await _context.TaskPs.ToListAsync();
+            return await _context.TaskPs
+                .Include(t => t.Workflows)
+                .Include(t => t.Issues)
+                .Include(t => t.TaskSprints)
+                .ToListAsync();
         }
 
         public async Task<TaskP> GetByIdAsync(Guid id)
@@ -98,6 +102,12 @@ namespace api.Repository
                 .ToListAsync();
 
             return tasks;
+        }
+
+        public async Task UpdateAsync(TaskP task)
+        {
+            _context.TaskPs.Update(task);
+            await _context.SaveChangesAsync();
         }
     }
 }
