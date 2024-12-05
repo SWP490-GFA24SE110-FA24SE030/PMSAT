@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace api.Dtos.Task
+﻿namespace api.Dtos.Task
 {
-    public class CreateTaskDto
+    public class UpdateTaskDto
     {
         public string? Type { get; set; }
-
         public string? Description { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }

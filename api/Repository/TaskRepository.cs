@@ -69,12 +69,21 @@ namespace api.Repository
 
         public async Task<List<TaskP>> GetAllAsync()
         {
-            return await _context.TaskPs.ToListAsync();
+            return await _context.TaskPs
+                .Include(t => t.Workflows)
+                .Include(t => t.Issues)
+                .Include(t => t.TaskSprints)
+                .ToListAsync();
         }
 
         public async Task<TaskP> GetByIdAsync(Guid id)
         {
-            return await _context.TaskPs.FindAsync(id);
+            var task = await _context.TaskPs
+                    .Where(t => t.Id == id)
+                    .Include(t => t.Workflows)
+                    .Include(t => t.Issues)
+                    .FirstOrDefaultAsync();
+            return task;
         }
 
         public async Task<List<TaskP>> GetTasksFromProjectAsync(Guid projectId)
@@ -89,9 +98,16 @@ namespace api.Repository
             // Fetch all tasks related to the project
             var tasks = await _context.TaskPs
                 .Where(t => t.ProjectId == projectId)
+                .Include(t => t.Workflows) // to display task's status workflows
                 .ToListAsync();
 
             return tasks;
+        }
+
+        public async Task UpdateAsync(TaskP task)
+        {
+            _context.TaskPs.Update(task);
+            await _context.SaveChangesAsync();
         }
     }
 }
