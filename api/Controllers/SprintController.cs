@@ -40,6 +40,13 @@ namespace api.Controllers
             return Ok(sprint);
         }
 
+        [HttpGet("{projectId}/getAllSprintByProjectId")]
+        public async Task<IActionResult> GetProjectPrint([FromRoute] Guid projectId)
+        {
+            var sprintsBelongToProject = await _sprintRepo.GetProjectSprint(projectId);
+            return Ok(sprintsBelongToProject);
+        }
+
         [HttpGet("{sprintId}/getSprintTaskById")]
         public async Task<IActionResult> GetSprintTask([FromRoute] Guid sprintId) 
         {

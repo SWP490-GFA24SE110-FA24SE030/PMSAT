@@ -31,11 +31,29 @@ namespace api.Repository
             return await _context.Sprints.ToListAsync();
         }
 
+        public async Task<List<Sprint>> GetProjectSprint(Guid projectId)
+        {
+            if (projectId == Guid.Empty)
+            {
+                throw new ArgumentException("Invalid Id provided", nameof(projectId));
+            }
+
+            return await _context.Sprints.Where(x => x.ProjectId == projectId)
+            .Select(sprint => new Sprint
+            {
+                Id = sprint.Id,
+                Name = sprint.Name,
+                StartDate = sprint.StartDate,
+                EndDate = sprint.EndDate,
+                Status = sprint.Status
+            }).ToListAsync();
+        }
+
         public async Task<Sprint?> GetByIdAsync(Guid id)
         {
             if (id == Guid.Empty)
             {
-                throw new ArgumentException("Invalid Guid provided", nameof(id));
+                throw new ArgumentException("Invalid Id provided", nameof(id));
             }
 
             return await _context.Sprints.FindAsync(id);

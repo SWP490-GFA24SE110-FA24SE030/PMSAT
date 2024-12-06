@@ -13,6 +13,8 @@ namespace api.Interfaces
         public Task<Sprint> GetByIdAsync(Guid id);
         public Task<List<Sprint>> GetAllAsync();
 
+        public Task<List<Sprint>> GetProjectSprint(Guid projectId);
+
         public Task<Sprint> GetByNameAsync(String sprintName);
     }
 }
