@@ -9,6 +9,19 @@ namespace api.Mappers
 {
     public static class SprintMapper
     {
+
+        public static SprintDto ToSprintDto(this Sprint sprintModel) 
+        {
+            return new SprintDto
+            {
+                Id = sprintModel.Id,
+                Name = sprintModel.Name,
+                StartDate = sprintModel.StartDate,
+                EndDate = sprintModel.EndDate,
+                Status = sprintModel.Status
+            };
+        }
+
         public static Sprint ToSprintFromCreate(this CreateSprintRequest request, Guid projectId) 
         {
             return new Sprint

@@ -57,7 +57,7 @@ namespace api.Repository
 
         public async Task<List<Project>> GetAllAsync()
         {
-            return await _context.Projects.Include(t => t.TaskPs).ToListAsync();
+            return await _context.Projects.Include(t => t.TaskPs).Include(s => s.Sprints).ToListAsync();
         }
 
         public async Task<Project?> GetByIdAsync(Guid id)

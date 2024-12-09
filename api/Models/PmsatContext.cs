@@ -208,7 +208,8 @@ public partial class PmsatContext : DbContext
 
             entity.HasOne(d => d.Project).WithMany(p => p.Sprints)
                 .HasForeignKey(d => d.ProjectId)
-                .HasConstraintName("FK__Sprint__ProjectI__5070F446");
+                .HasConstraintName("FK__Sprint__ProjectI__5070F446")
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<TaskP>(entity =>
@@ -244,7 +245,8 @@ public partial class PmsatContext : DbContext
 
             entity.HasOne(d => d.Sprint).WithMany(p => p.TaskSprints)
                 .HasForeignKey(d => d.SprintId)
-                .HasConstraintName("FK__TaskSprin__Sprin__5CD6CB2B");
+                .HasConstraintName("FK__TaskSprin__Sprin__5CD6CB2B")
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(d => d.Task).WithMany(p => p.TaskSprints)
                 .HasForeignKey(d => d.TaskId)
