@@ -161,7 +161,7 @@ namespace api.Controllers
             }
 
             // Update task properties
-            existingTask.Type = taskDto.Type;
+            existingTask.Status = taskDto.Status;
             existingTask.Description = taskDto.Description;
             existingTask.StartDate = taskDto.StartDate;
             existingTask.EndDate = taskDto.EndDate;
@@ -177,8 +177,8 @@ namespace api.Controllers
                 Id = Guid.NewGuid(),
                 TaskId = existingTask.Id,
                 OldStatus = latestWorkflow?.CurrentStatus ?? "To-Do", // Default to "To-Do" if no prior status
-                CurrentStatus = taskDto.Type,
-                NewStatus = taskDto.Type,
+                CurrentStatus = taskDto.Status,
+                NewStatus = taskDto.Status,
                 UpdatedAt = DateTime.Now
             };
             await _workflowRepo.CreateAsync(newWorkflow);
