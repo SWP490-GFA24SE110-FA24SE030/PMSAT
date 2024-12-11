@@ -7,7 +7,7 @@ public partial class TaskP
 {
     public Guid Id { get; set; }
 
-    public string? Type { get; set; }
+    public string? Status { get; set; }
 
     public string? Description { get; set; }
 
@@ -19,13 +19,7 @@ public partial class TaskP
 
     public Guid? ProjectId { get; set; }
 
-    public virtual ICollection<Issue> Issues { get; set; } = new List<Issue>();
-
     public virtual Project? Project { get; set; }
 
     public virtual ProjectMember? ProjectMember { get; set; }
-
-    public virtual ICollection<TaskSprint> TaskSprints { get; set; } = new List<TaskSprint>();
-
-    public virtual ICollection<Workflow> Workflows { get; set; } = new List<Workflow>();
 }
