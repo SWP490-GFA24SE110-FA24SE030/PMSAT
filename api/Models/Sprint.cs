@@ -18,4 +18,6 @@ public partial class Sprint
     public Guid? ProjectId { get; set; }
 
     public virtual Project? Project { get; set; }
+
+    public virtual ICollection<TaskSprint> TaskSprints { get; set; } = new List<TaskSprint>();
 }
