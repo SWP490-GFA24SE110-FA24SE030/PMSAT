@@ -30,7 +30,9 @@ namespace api.Controllers
         public async Task<IActionResult> GetAllSprint() 
         {
             var sprint = await _sprintRepo.GetAllAsync();
-            return Ok(sprint);
+            var sprintDto = sprint.Select(s => s.ToSprintDto());
+
+            return Ok(sprintDto);
         }
 
         [HttpGet("{sprintId}")]

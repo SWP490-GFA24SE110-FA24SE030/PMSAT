@@ -19,6 +19,7 @@ namespace api.Mappers
                 CreatedAt = projectModel.CreatedAt,
                 Status = projectModel.Status,
                 TaskPs = projectModel.TaskPs.Select(t => t.ToTaskDto()).ToList(),
+                Sprints = projectModel.Sprints.Select(s => s.ToSprintDto()).ToList(),
                 ProjectMembers = projectModel.ProjectMembers.Select(pm => pm.ToProjectMemberDto()).ToList(),
             };
         }

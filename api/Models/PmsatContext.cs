@@ -51,7 +51,7 @@ public partial class PmsatContext : DbContext
     {
         modelBuilder.Entity<AnalysisResult>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Analysis__3214EC0703BF3B97");
+            entity.HasKey(e => e.Id).HasName("PK__Analysis__3214EC0756B6B1BD");
 
             entity.ToTable("AnalysisResult");
 
@@ -65,12 +65,13 @@ public partial class PmsatContext : DbContext
 
             entity.HasOne(d => d.Project).WithMany(p => p.AnalysisResults)
                 .HasForeignKey(d => d.ProjectId)
-                .HasConstraintName("FK__AnalysisR__Proje__5441852A");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__AnalysisR__Proje__4222D4EF");
         });
 
         modelBuilder.Entity<Commit>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Commits__3214EC07E33AEF30");
+            entity.HasKey(e => e.Id).HasName("PK__Commits__3214EC07CD4E16B0");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
@@ -78,12 +79,13 @@ public partial class PmsatContext : DbContext
 
             entity.HasOne(d => d.Repository).WithMany(p => p.Commits)
                 .HasForeignKey(d => d.RepositoryId)
-                .HasConstraintName("FK__Commits__Reposit__5CD6CB2B");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__Commits__Reposit__4AB81AF0");
         });
 
         modelBuilder.Entity<EvaluationResult>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Evaluati__3214EC07FE268ABB");
+            entity.HasKey(e => e.Id).HasName("PK__Evaluati__3214EC0787F6F490");
 
             entity.ToTable("EvaluationResult");
 
@@ -95,12 +97,13 @@ public partial class PmsatContext : DbContext
 
             entity.HasOne(d => d.ProjectMember).WithMany(p => p.EvaluationResults)
                 .HasForeignKey(d => d.ProjectMemberId)
-                .HasConstraintName("FK__Evaluatio__Proje__571DF1D5");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__Evaluatio__Proje__44FF419A");
         });
 
         modelBuilder.Entity<Feedback>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Feedback__3214EC07730A31CC");
+            entity.HasKey(e => e.Id).HasName("PK__Feedback__3214EC078A1F0207");
 
             entity.ToTable("Feedback");
 
@@ -110,12 +113,13 @@ public partial class PmsatContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Feedbacks)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Feedback__UserId__4BAC3F29");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__Feedback__UserId__3F466844");
         });
 
         modelBuilder.Entity<Issue>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Issue__3214EC071A00E884");
+            entity.HasKey(e => e.Id).HasName("PK__Issue__3214EC07D3B8786A");
 
             entity.ToTable("Issue");
 
@@ -125,12 +129,13 @@ public partial class PmsatContext : DbContext
 
             entity.HasOne(d => d.Task).WithMany(p => p.Issues)
                 .HasForeignKey(d => d.TaskId)
-                .HasConstraintName("FK__Issue__TaskId__693CA210");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__Issue__TaskId__571DF1D5");
         });
 
         modelBuilder.Entity<Project>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Project__3214EC07648CAF24");
+            entity.HasKey(e => e.Id).HasName("PK__Project__3214EC073D06B765");
 
             entity.ToTable("Project");
 
@@ -143,7 +148,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<ProjectMember>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ProjectM__3214EC079F643737");
+            entity.HasKey(e => e.Id).HasName("PK__ProjectM__3214EC0736BA5850");
 
             entity.ToTable("ProjectMember");
 
@@ -152,16 +157,18 @@ public partial class PmsatContext : DbContext
 
             entity.HasOne(d => d.Project).WithMany(p => p.ProjectMembers)
                 .HasForeignKey(d => d.ProjectId)
-                .HasConstraintName("FK__ProjectMe__Proje__5165187F");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__ProjectMe__Proje__3C69FB99");
 
             entity.HasOne(d => d.User).WithMany(p => p.ProjectMembers)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__ProjectMe__UserI__5070F446");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__ProjectMe__UserI__3B75D760");
         });
 
         modelBuilder.Entity<PullRequest>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PullRequ__3214EC07A7ADAFD4");
+            entity.HasKey(e => e.Id).HasName("PK__PullRequ__3214EC07A796A5FB");
 
             entity.ToTable("PullRequest");
 
@@ -175,12 +182,13 @@ public partial class PmsatContext : DbContext
 
             entity.HasOne(d => d.Repository).WithMany(p => p.PullRequests)
                 .HasForeignKey(d => d.RepositoryId)
-                .HasConstraintName("FK__PullReque__Repos__5FB337D6");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__PullReque__Repos__4D94879B");
         });
 
         modelBuilder.Entity<Repository>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Reposito__3214EC07153E9BDE");
+            entity.HasKey(e => e.Id).HasName("PK__Reposito__3214EC077D0C84F3");
 
             entity.ToTable("Repository");
 
@@ -191,12 +199,13 @@ public partial class PmsatContext : DbContext
 
             entity.HasOne(d => d.ProjectMember).WithMany(p => p.Repositories)
                 .HasForeignKey(d => d.ProjectMemberId)
-                .HasConstraintName("FK__Repositor__Proje__59FA5E80");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__Repositor__Proje__47DBAE45");
         });
 
         modelBuilder.Entity<Sprint>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Sprint__3214EC077C99018C");
+            entity.HasKey(e => e.Id).HasName("PK__Sprint__3214EC077E03467B");
 
             entity.ToTable("Sprint");
 
@@ -208,33 +217,36 @@ public partial class PmsatContext : DbContext
 
             entity.HasOne(d => d.Project).WithMany(p => p.Sprints)
                 .HasForeignKey(d => d.ProjectId)
-                .HasConstraintName("FK__Sprint__ProjectI__628FA481");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__Sprint__ProjectI__5070F446");
         });
 
         modelBuilder.Entity<TaskP>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__TaskP__3214EC07713E2414");
+            entity.HasKey(e => e.Id).HasName("PK__TaskP__3214EC070A2F75BD");
 
             entity.ToTable("TaskP");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Description).HasMaxLength(255);
             entity.Property(e => e.EndDate).HasColumnType("datetime");
+            entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.StartDate).HasColumnType("datetime");
             entity.Property(e => e.Status).HasMaxLength(50);
 
             entity.HasOne(d => d.Project).WithMany(p => p.TaskPs)
                 .HasForeignKey(d => d.ProjectId)
-                .HasConstraintName("FK__TaskP__ProjectId__66603565");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__TaskP__ProjectId__5441852A");
 
             entity.HasOne(d => d.ProjectMember).WithMany(p => p.TaskPs)
                 .HasForeignKey(d => d.ProjectMemberId)
-                .HasConstraintName("FK__TaskP__ProjectMe__656C112C");
+                .HasConstraintName("FK__TaskP__ProjectMe__534D60F1");
         });
 
         modelBuilder.Entity<TaskSprint>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__TaskSpri__3214EC0715563BFF");
+            entity.HasKey(e => e.Id).HasName("PK__TaskSpri__3214EC071A0D7C94");
 
             entity.ToTable("TaskSprint");
 
@@ -244,16 +256,17 @@ public partial class PmsatContext : DbContext
 
             entity.HasOne(d => d.Sprint).WithMany(p => p.TaskSprints)
                 .HasForeignKey(d => d.SprintId)
-                .HasConstraintName("FK__TaskSprin__Sprin__6EF57B66");
+                .HasConstraintName("FK__TaskSprin__Sprin__5CD6CB2B")
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(d => d.Task).WithMany(p => p.TaskSprints)
                 .HasForeignKey(d => d.TaskId)
-                .HasConstraintName("FK__TaskSprin__TaskI__6FE99F9F");
+                .HasConstraintName("FK__TaskSprin__TaskI__5DCAEF64");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC07539B6287");
+            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC07B58D07D3");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Email).HasMaxLength(255);
@@ -265,7 +278,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<Workflow>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Workflow__3214EC0781FFCEE9");
+            entity.HasKey(e => e.Id).HasName("PK__Workflow__3214EC07482D9936");
 
             entity.ToTable("Workflow");
 
@@ -277,7 +290,8 @@ public partial class PmsatContext : DbContext
 
             entity.HasOne(d => d.Task).WithMany(p => p.Workflows)
                 .HasForeignKey(d => d.TaskId)
-                .HasConstraintName("FK__Workflow__TaskId__6C190EBB");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__Workflow__TaskId__59FA5E80");
         });
 
         OnModelCreatingPartial(modelBuilder);

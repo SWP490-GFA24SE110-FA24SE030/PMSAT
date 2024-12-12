@@ -1,3 +1,4 @@
+using api.Dtos.Sprint;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace api.Dtos.Project
         
         public virtual ICollection<TaskDto> TaskPs { get; set; } = new List<TaskDto>();
 
+        public virtual ICollection<SprintDto> Sprints { get; set; } = new List<SprintDto>();
         public virtual ICollection<ProjectMemberDto> ProjectMembers { get; set; } = new List<ProjectMemberDto>();
     }
 }

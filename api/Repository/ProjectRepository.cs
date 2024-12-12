@@ -99,6 +99,7 @@ namespace api.Repository
         {
             return await _context.Projects
                 .Include(t => t.TaskPs)
+                .Include(s => s.Sprints)
                 .Include(pm => pm.ProjectMembers)
                 .ToListAsync();
         }
