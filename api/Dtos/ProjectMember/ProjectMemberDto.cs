@@ -2,8 +2,7 @@
 {
     public class ProjectMemberDto
     {
-        public Guid UserId { get; set; }
-        public Guid ProjectId { get; set; }
-        public required string Role { get; set; }
+        public Guid Id { get; set; }
+        public string? Role { get; set; }
     }
 }

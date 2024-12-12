@@ -31,7 +31,7 @@ namespace api.Repository
             .Select(task => new TaskP
             {
                 Id = task.Id,
-                Type = task.Task.Type,
+                Status = task.Task.Status,
                 Description = task.Task.Description,
                 StartDate = task.Task.StartDate,
                 EndDate = task.Task.EndDate

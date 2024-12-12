@@ -1,5 +1,6 @@
 ﻿using api.Dtos.ProjectMember;
 using api.Interfaces;
+using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -15,27 +16,37 @@ namespace api.Controllers
             _projectMemberRepository = projectMemberRepository;
         }
 
-        [HttpPost("add")]
-        public async Task<IActionResult> AddProjectMember([FromBody] ProjectMemberDto projectMemberDto)
+        [HttpPost("prjid={projectId}/add")]
+        public async Task<IActionResult> AddProjectMember([FromRoute] Guid projectId, [FromBody] AddProjectMemberRequest projectMemberDto)
         {
-            var success = await _projectMemberRepository.AddProjectMemberAsync(projectMemberDto);
+            var success = await _projectMemberRepository.AddProjectMemberAsync(projectId, projectMemberDto);
 
             if (!success)
-                return BadRequest(new { message = "Failed to add project member." });
+                return BadRequest(new { message = "Failed to add project member. Ensure the user exists and the project ID is valid." });
 
             return Ok(new { message = "Project member added successfully." });
         }
 
-        [HttpGet("prjid={projectId}/members")]
-        public async Task<IActionResult> GetProjectMembers([FromRoute] Guid projectId)
+        [HttpGet("prjid={projectId}/all")]
+        public async Task<IActionResult> GetProjectMembersFromProject([FromRoute] Guid projectId)
         {
-            // Get all project members
-            var members = await _projectMemberRepository.GetProjectMembersAsync(projectId);
+            try
+            {
+                var projectMembers = await _projectMemberRepository.GetProjectMembersFromProjectAsync(projectId);
 
-            if (members == null || !members.Any())
-                return NotFound(new { message = "No project members found." });
+                // Convert to DTOs if necessary
+                var projectMemberDtos = projectMembers.Select(pm => pm.ToProjectMemberDto()).ToList();
 
-            return Ok(members);
+                return Ok(projectMembers);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while retrieving project members.", error = ex.Message });
+            }
         }
     }
 }

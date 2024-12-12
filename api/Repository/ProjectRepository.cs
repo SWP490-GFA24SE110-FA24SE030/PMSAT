@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Dtos.Project;
@@ -22,6 +23,45 @@ namespace api.Repository
             await _context.Projects.AddAsync(projectModel);
             await _context.SaveChangesAsync();
             return projectModel;
+        }
+
+        public async Task<Guid> CreateProjectAsync(Guid userId, CreateProjectRequestDto createProjectDto)
+        {
+            // Check if the user exists
+            var userExists = await _context.Users.AnyAsync(u => u.Id == userId);
+            if (!userExists)
+            {
+                throw new ArgumentException("User does not exist.");
+            }
+
+            // Create a new project
+            var newProject = new Project
+            {
+                Id = Guid.NewGuid(),
+                Title = createProjectDto.Title,
+                Description = createProjectDto.Description,
+                CreatedAt = DateTime.Now,
+                Status = "Active"
+            };
+
+            // Add the project to the database
+            _context.Projects.Add(newProject);
+            await _context.SaveChangesAsync();
+
+            // Create a new ProjectMember entry for the user (who created project) as the Leader
+            var newProjectMember = new ProjectMember
+            {
+                Id = Guid.NewGuid(),
+                Role = "Leader",
+                UserId = userId,
+                ProjectId = newProject.Id
+            };
+
+            // Add the project member to the database
+            _context.ProjectMembers.Add(newProjectMember);
+            await _context.SaveChangesAsync();
+
+            return newProject.Id;
         }
 
         public async Task<List<Project>> DeleteAllAsync()
@@ -57,12 +97,44 @@ namespace api.Repository
 
         public async Task<List<Project>> GetAllAsync()
         {
-            return await _context.Projects.Include(t => t.TaskPs).Include(s => s.Sprints).ToListAsync();
+            return await _context.Projects
+                .Include(t => t.TaskPs)
+                .Include(s => s.Sprints)
+                .Include(pm => pm.ProjectMembers)
+                .ToListAsync();
+        }
+
+        public async Task<List<Project>> GetAllProjectsByUserIdAsync(Guid userId)
+        {
+            var userExists = await _context.Users.AnyAsync(u => u.Id == userId);
+            if (!userExists)
+            {
+                throw new ArgumentException("User does not exist.");
+            }
+
+            // Query projects associated with the user through the ProjectMember table
+            var projectMembers = await _context.ProjectMembers
+                .Where(pm => pm.UserId == userId)
+                .Include(pm => pm.Project) // Include the associated Project
+                .ToListAsync();
+
+            return projectMembers.Select(pm => pm.Project).ToList();
         }
 
         public async Task<Project?> GetByIdAsync(Guid id)
         {
-            return await _context.Projects.Include(t => t.TaskPs).FirstOrDefaultAsync(i => i.Id == id);
+            return await _context.Projects
+                .Include(t => t.TaskPs)
+                .Include(pm => pm.ProjectMembers)
+                .FirstOrDefaultAsync(i => i.Id == id);
+        }
+
+        public async Task<List<Project>> GetByTitleAsync(string title)
+        {
+            // Ensure case-insensitive search
+            return await _context.Projects
+                .Where(p => EF.Functions.Like(p.Title, $"%{title}%"))
+                .ToListAsync();
         }
 
         public Task<bool> ProjectExist(Guid id)

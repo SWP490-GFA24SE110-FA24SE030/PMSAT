@@ -1,10 +1,11 @@
 ﻿using api.Dtos.ProjectMember;
+using api.Models;
 
 namespace api.Interfaces
 {
     public interface IProjectMemberRepository
     {
-        Task<bool> AddProjectMemberAsync(ProjectMemberDto projectMemberDto);
-        Task<IEnumerable<ProjectMemberDto>> GetProjectMembersAsync(Guid projectId);
+        Task<bool> AddProjectMemberAsync(Guid projectId, AddProjectMemberRequest projectMemberDto);
+        Task<List<ProjectMember>> GetProjectMembersFromProjectAsync(Guid projectId);
     }
 }
