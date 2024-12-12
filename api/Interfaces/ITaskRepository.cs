@@ -16,5 +16,6 @@ namespace api.Interfaces
         Task<TaskP> CreateAsync(TaskP taskModel);
         Task UpdateAsync(TaskP task);
         Task<string> AssignTaskToMemberAsync(Guid leaderId, Guid taskId, string email);
+        Task<TaskP> DeleteByIdAsync(Guid id);
     }
 }

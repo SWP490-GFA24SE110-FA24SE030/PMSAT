@@ -28,7 +28,9 @@ namespace api.Mappers
             {
                 Id = Guid.NewGuid(),
                 Status = taskDto.Status,
+                Name = taskDto.Name,
                 Description = taskDto.Description,
+                Priority = taskDto.Priority,
                 StartDate = taskDto.StartDate,
                 EndDate = taskDto.EndDate,
                 ProjectId = projectId

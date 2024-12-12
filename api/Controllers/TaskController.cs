@@ -109,7 +109,8 @@ namespace api.Controllers
             // Save the Workflow entity
             await _workflowRepo.CreateAsync(workflowModel);
 
-            return CreatedAtAction(nameof(GetById), new {id = taskModel}, taskModel.ToTaskDto());
+            //return CreatedAtAction(nameof(GetById), new {id = taskModel}, taskModel.ToTaskDto());
+            return Ok(new { Message = "Task created successfully." });
         }
 
         //[HttpPut("{taskId}/status")]
@@ -162,7 +163,9 @@ namespace api.Controllers
 
             // Update task properties
             existingTask.Status = taskDto.Status;
+            existingTask.Name = taskDto.Name;
             existingTask.Description = taskDto.Description;
+            existingTask.Priority = taskDto.Priority;
             existingTask.StartDate = taskDto.StartDate;
             existingTask.EndDate = taskDto.EndDate;
 
@@ -195,6 +198,15 @@ namespace api.Controllers
                 return Ok(new { message = "Task assigned successfully." });
             }
             return BadRequest(new { message = resultMessage });
+        }
+
+        [HttpDelete]
+        [Route("delete/tskid={id}")]
+        public async Task<IActionResult> DeleteByIdAsync([FromRoute] Guid id)
+        {
+            var taskModel = await _taskRepo.DeleteByIdAsync(id);
+
+            return Ok(new { Message = "Task(s) deleted successfully." });
         }
     }
 }

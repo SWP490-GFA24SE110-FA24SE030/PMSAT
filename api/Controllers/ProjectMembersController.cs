@@ -48,5 +48,14 @@ namespace api.Controllers
                 return StatusCode(500, new { message = "An error occurred while retrieving project members.", error = ex.Message });
             }
         }
+
+        [HttpDelete]
+        [Route("delete/prjmemberid={id}")]
+        public async Task<IActionResult> DeleteByIdAsync([FromRoute] Guid id)
+        {
+            var projectMemberModel = await _projectMemberRepository.DeleteByIdAsync(id);
+
+            return Ok(new { Message = "Project Member(s) deleted successfully." });
+        }
     }
 }

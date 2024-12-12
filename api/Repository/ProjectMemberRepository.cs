@@ -41,6 +41,17 @@ namespace api.Repository
             return true;
         }
 
+        public async Task<ProjectMember> DeleteByIdAsync(Guid id)
+        {
+            var projectMemberModel = await _context.ProjectMembers.FirstOrDefaultAsync(x => x.Id == id);
+
+            _context.ProjectMembers.Remove(projectMemberModel);
+
+            await _context.SaveChangesAsync();
+
+            return projectMemberModel;
+        }
+
         public async Task<List<ProjectMember>> GetProjectMembersFromProjectAsync(Guid projectId)
         {
             var projectExists = await _context.Projects.AnyAsync(p => p.Id == projectId);

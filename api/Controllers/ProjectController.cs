@@ -141,12 +141,7 @@ namespace api.Controllers
         {
             var projectModel = await _projectRepo.DeleteByIdAsync(id);
 
-            if (projectModel == null)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
+            return Ok(new { Message = "Project(s) deleted successfully." });
         }
 
         [HttpDelete]
@@ -155,12 +150,7 @@ namespace api.Controllers
         {
             var projectModel = await _projectRepo.DeleteAllAsync();
 
-            if (projectModel == null)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
+            return Ok(new { Message = "Project(s) deleted successfully." });
         }
     }
 }
