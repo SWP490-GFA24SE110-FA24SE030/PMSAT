@@ -67,6 +67,17 @@ namespace api.Repository
             return taskModel;
         }
 
+        public async Task<TaskP> DeleteByIdAsync(Guid id)
+        {
+            var taskModel = await _context.TaskPs.FirstOrDefaultAsync(x => x.Id == id);
+
+            _context.TaskPs.Remove(taskModel);
+
+            await _context.SaveChangesAsync();
+
+            return taskModel;
+        }
+
         public async Task<List<TaskP>> GetAllAsync()
         {
             return await _context.TaskPs

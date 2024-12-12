@@ -199,5 +199,14 @@ namespace api.Controllers
             }
             return BadRequest(new { message = resultMessage });
         }
+
+        [HttpDelete]
+        [Route("delete/tskid={id}")]
+        public async Task<IActionResult> DeleteByIdAsync([FromRoute] Guid id)
+        {
+            var taskModel = await _taskRepo.DeleteByIdAsync(id);
+
+            return Ok(new { Message = "Task(s) deleted successfully." });
+        }
     }
 }

@@ -7,5 +7,6 @@ namespace api.Interfaces
     {
         Task<bool> AddProjectMemberAsync(Guid projectId, AddProjectMemberRequest projectMemberDto);
         Task<List<ProjectMember>> GetProjectMembersFromProjectAsync(Guid projectId);
+        Task<ProjectMember> DeleteByIdAsync(Guid id);
     }
 }
