@@ -14,6 +14,8 @@ namespace api.Interfaces
         public Task<TaskSprint> Create(TaskSprint taskSprint);
         public Task<TaskSprint> RemoveTask(TaskP task, Guid sprintId);
 
+        public Task<TaskSprint> TaskExistInSprint(TaskP task, Guid sprintId);
+
 
     }
 

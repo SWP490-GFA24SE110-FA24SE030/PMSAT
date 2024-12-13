@@ -18,4 +18,9 @@ public partial class TaskSprint
     public virtual Sprint? Sprint { get; set; }
 
     public virtual TaskP? Task { get; set; }
+
+    public static implicit operator Task<object>(TaskSprint v)
+    {
+        throw new NotImplementedException();
+    }
 }
