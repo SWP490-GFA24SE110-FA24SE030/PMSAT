@@ -49,5 +49,10 @@ namespace api.Repository
             await _context.SaveChangesAsync();
             return taskModel;
         }
+
+        public async Task<TaskSprint> TaskExistInSprint(TaskP task, Guid sprintId)
+        {
+            return await _context.TaskSprints.FirstOrDefaultAsync(x => x.Task == task && x.SprintId == sprintId);
+        }
     }
 }
