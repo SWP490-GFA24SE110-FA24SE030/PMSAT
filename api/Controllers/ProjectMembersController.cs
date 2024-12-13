@@ -22,7 +22,25 @@ namespace api.Controllers
             var success = await _projectMemberRepository.AddProjectMemberAsync(projectId, projectMemberDto);
 
             if (!success)
-                return BadRequest(new { message = "Failed to add project member. Ensure the user exists and the project ID is valid." });
+            {
+                var projectExists = await _projectMemberRepository.ProjectExistsAsync(projectId);
+                if (!projectExists)
+                {
+                    return NotFound(new { message = "Project not found." });
+                }
+
+                var user = await _projectMemberRepository.GetUserByEmailAsync(projectMemberDto.Email);
+                if (user == null)
+                {
+                    return NotFound(new { message = "User not found." });
+                }
+
+                var isUserAlreadyMember = await _projectMemberRepository.IsUserAlreadyMemberAsync(projectId, user.Id);
+                if (isUserAlreadyMember)
+                {
+                    return Conflict(new { message = "This member's email has been already added in the project." });
+                }
+            }    
 
             return Ok(new { message = "Project member added successfully." });
         }
