@@ -17,13 +17,16 @@ namespace api.Repository
         public async Task<bool> AddProjectMemberAsync(Guid projectId, AddProjectMemberRequest projectMemberDto)
         {
             // Check if the project exists
-            var projectExists = await _context.Projects.AnyAsync(p => p.Id == projectId);
-            if (!projectExists)
+            if (!await ProjectExistsAsync(projectId))
                 return false;
 
             // Find the user by email
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == projectMemberDto.Email);
+            var user = await GetUserByEmailAsync(projectMemberDto.Email);
             if (user == null)
+                return false;
+
+            // Check if the user is already a member of the project
+            if (await IsUserAlreadyMemberAsync(projectId, user.Id))
                 return false;
 
             // Create a new ProjectMember entity
@@ -67,6 +70,21 @@ namespace api.Repository
                 .ToListAsync();
 
             return projectMembers;
+        }
+
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+        public async Task<bool> IsUserAlreadyMemberAsync(Guid projectId, Guid userId)
+        {
+            return await _context.ProjectMembers.AnyAsync(pm => pm.ProjectId == projectId && pm.UserId == userId);
+        }
+
+        public async Task<bool> ProjectExistsAsync(Guid projectId)
+        {
+            return await _context.Projects.AnyAsync(p => p.Id == projectId);
         }
     }
 }
