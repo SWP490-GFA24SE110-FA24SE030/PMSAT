@@ -97,11 +97,11 @@ namespace api.Controllers
             if (task == null)
                 return BadRequest("Task not found");
             
-            var taskSprintModel = sprint.TaskSprints.FirstOrDefault(ts => ts.TaskId == taskId);
-            if (taskSprintModel != null)
+            
+            if (await _taskSprintRepo.TaskExistInSprint(task, sprintId) != null)
                 return BadRequest("Task is already assigned to this sprint");
             
-            taskSprintModel = new TaskSprint
+            var taskSprintModel = new TaskSprint
             {
                 Id = Guid.NewGuid(),
                 SprintId = sprint.Id,
@@ -118,14 +118,14 @@ namespace api.Controllers
         public async Task<IActionResult> RemoveTaskFromSprint(Guid sprintId, Guid taskId)
         {
             var sprint = await _sprintRepo.GetByIdAsync(sprintId);
+            var taskModel = await _taskRepo.GetByIdAsync(taskId);
             if (sprint == null)
                 return BadRequest("Sprint not found");
 
-            var taskSprint = sprint.TaskSprints.FirstOrDefault(ts => ts.TaskId == taskId);
-            if (taskSprint == null)
+            if (await _taskSprintRepo.TaskExistInSprint(taskModel, sprintId) == null)
                 return BadRequest("Task is not assigned to this sprint");
                 
-            var taskModel = await _taskRepo.GetByIdAsync(taskId);
+            
             await _taskSprintRepo.RemoveTask(taskModel, sprintId);
             
             return Ok(taskModel);
