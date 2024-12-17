@@ -13,11 +13,11 @@ public partial class Repository
 
     public string? Url { get; set; }
 
-    public Guid? ProjectMemberId { get; set; }
+    public Guid? UserId { get; set; }
 
     public virtual ICollection<Commit> Commits { get; set; } = new List<Commit>();
 
-    public virtual ProjectMember? ProjectMember { get; set; }
-
     public virtual ICollection<PullRequest> PullRequests { get; set; } = new List<PullRequest>();
+
+    public virtual User? User { get; set; }
 }

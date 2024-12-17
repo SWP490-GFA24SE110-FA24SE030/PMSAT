@@ -7,29 +7,33 @@ public partial class TaskP
 {
     public Guid Id { get; set; }
 
-    public string? Status { get; set; }
-
-    public string? Name { get; set; }
+    public string? Title { get; set; }
 
     public string? Description { get; set; }
 
     public int? Priority { get; set; }
 
-    public DateTime? StartDate { get; set; }
+    public DateTime? Created { get; set; }
 
-    public DateTime? EndDate { get; set; }
+    public DateTime? Updated { get; set; }
 
-    public Guid? ProjectMemberId { get; set; }
+    public Guid? ReporterId { get; set; }
+
+    public Guid? AssigneeId { get; set; }
 
     public Guid? ProjectId { get; set; }
+
+    public Guid? StatusId { get; set; }
+
+    public virtual User? Assignee { get; set; }
 
     public virtual ICollection<Issue> Issues { get; set; } = new List<Issue>();
 
     public virtual Project? Project { get; set; }
 
-    public virtual ProjectMember? ProjectMember { get; set; }
+    public virtual User? Reporter { get; set; }
 
-    public virtual ICollection<TaskSprint> TaskSprints { get; set; } = new List<TaskSprint>();
+    public virtual Board? Status { get; set; }
 
     public virtual ICollection<Workflow> Workflows { get; set; } = new List<Workflow>();
 }

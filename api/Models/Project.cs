@@ -9,15 +9,9 @@ public partial class Project
 
     public string? Title { get; set; }
 
-    public string? Description { get; set; }
-
-    public DateTime? CreatedAt { get; set; }
-
-    public string? Status { get; set; }
-
     public virtual ICollection<AnalysisResult> AnalysisResults { get; set; } = new List<AnalysisResult>();
 
-    public virtual ICollection<ProjectMember> ProjectMembers { get; set; } = new List<ProjectMember>();
+    public virtual ICollection<Board> Boards { get; set; } = new List<Board>();
 
     public virtual ICollection<Sprint> Sprints { get; set; } = new List<Sprint>();
 

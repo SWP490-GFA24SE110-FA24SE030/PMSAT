@@ -12,7 +12,7 @@ CREATE TABLE Users (
     Name NVARCHAR(255),
     Email NVARCHAR(255),
     Password NVARCHAR(255),
-    Role NVARCHAR(50),
+    Role NVARCHAR(50), -- user,admin
     Status NVARCHAR(50)
 );
 
@@ -20,28 +20,15 @@ CREATE TABLE Users (
 CREATE TABLE Project (
     Id UNIQUEIDENTIFIER PRIMARY KEY,
     Title NVARCHAR(255),
-    Description NVARCHAR(255),
-    CreatedAt DATETIME,
-    Status NVARCHAR(50)
 );
 
 -- Table: ProjectMember
 CREATE TABLE ProjectMember (
-    Id UNIQUEIDENTIFIER PRIMARY KEY,
-    Role NVARCHAR(50),
+    Role NVARCHAR(50), --leader, ...
     UserId UNIQUEIDENTIFIER,
     ProjectId UNIQUEIDENTIFIER,
     FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE,
     FOREIGN KEY (ProjectId) REFERENCES Project(Id) ON DELETE CASCADE
-);
-
--- Table: Feedback
-CREATE TABLE Feedback (
-    Id UNIQUEIDENTIFIER PRIMARY KEY,
-    Type NVARCHAR(50),
-    Detail NVARCHAR(255),
-    UserId UNIQUEIDENTIFIER,
-    FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE
 );
 
 -- Table: AnalysisResult
@@ -57,26 +44,14 @@ CREATE TABLE AnalysisResult (
     FOREIGN KEY (ProjectId) REFERENCES Project(Id) ON DELETE CASCADE
 );
 
--- Table: EvaluationResult
-CREATE TABLE EvaluationResult (
-    Id UNIQUEIDENTIFIER PRIMARY KEY,
-    Score INT,
-    WorkTrendAnalysis NVARCHAR(255),
-    ReviewerComments NVARCHAR(255),
-    Strengths NVARCHAR(255),
-    AreasForImprovement NVARCHAR(255),
-    ProjectMemberId UNIQUEIDENTIFIER,
-    FOREIGN KEY (ProjectMemberId) REFERENCES ProjectMember(Id) ON DELETE CASCADE
-);
-
 -- Table: Repository
 CREATE TABLE Repository (
     Id UNIQUEIDENTIFIER PRIMARY KEY,
     Name NVARCHAR(255),
     Owner NVARCHAR(255),
     Url NVARCHAR(255),
-    ProjectMemberId UNIQUEIDENTIFIER,
-    FOREIGN KEY (ProjectMemberId) REFERENCES ProjectMember(Id) ON DELETE CASCADE
+    UserId UNIQUEIDENTIFIER,
+    FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE
 );
 
 -- Table: Commits
@@ -107,24 +82,47 @@ CREATE TABLE Sprint (
     Name NVARCHAR(255),
     StartDate DATETIME,
     EndDate DATETIME,
-    Status NVARCHAR(50),
     ProjectId UNIQUEIDENTIFIER,
+    FOREIGN KEY (ProjectId) REFERENCES Project(Id) ON DELETE CASCADE
+);
+
+CREATE TABLE Board (
+    Id UNIQUEIDENTIFIER PRIMARY KEY,
+	Status NVARCHAR(50), --todo,....
+	ProjectId UNIQUEIDENTIFIER,
     FOREIGN KEY (ProjectId) REFERENCES Project(Id) ON DELETE CASCADE
 );
 
 -- Table: TaskP
 CREATE TABLE TaskP (
     Id UNIQUEIDENTIFIER PRIMARY KEY,
-    Status NVARCHAR(50),
-	Name NVARCHAR(50),
+	Title NVARCHAR(50),
     Description NVARCHAR(255),
 	Priority INT,
-    StartDate DATETIME,
-    EndDate DATETIME,
-    ProjectMemberId UNIQUEIDENTIFIER,
+    Created DATETIME,
+    Updated DATETIME,
+    ReporterId UNIQUEIDENTIFIER,
+	AssigneeId UNIQUEIDENTIFIER,
     ProjectId UNIQUEIDENTIFIER,
-    FOREIGN KEY (ProjectMemberId) REFERENCES ProjectMember(Id) ON DELETE NO ACTION,
-    FOREIGN KEY (ProjectId) REFERENCES Project(Id) ON DELETE CASCADE -- Cascade delete for Project
+	StatusId UNIQUEIDENTIFIER,
+    FOREIGN KEY (ReporterId) REFERENCES Users(Id) ON DELETE NO ACTION,
+	FOREIGN KEY (AssigneeId) REFERENCES Users(Id) ON DELETE NO ACTION,
+    FOREIGN KEY (ProjectId) REFERENCES Project(Id) ON DELETE CASCADE, -- Cascade delete for Project
+	FOREIGN KEY (StatusId) REFERENCES Board(Id) ON DELETE NO ACTION
+);
+
+-- Table: Tag
+CREATE TABLE Tag (
+    Id UNIQUEIDENTIFIER PRIMARY KEY,
+	Name NVARCHAR(255), 
+);
+
+-- Table: TaskTag
+CREATE TABLE TaskTag (
+	TaskId UNIQUEIDENTIFIER,
+	TagId UNIQUEIDENTIFIER,
+    FOREIGN KEY (TaskId) REFERENCES TaskP(Id) ON DELETE SET NULL,
+	FOREIGN KEY (TagId) REFERENCES Tag(Id) ON DELETE SET NULL
 );
 
 -- Table: Issue
@@ -145,15 +143,4 @@ CREATE TABLE Workflow (
     UpdatedAt DATETIME,
     TaskId UNIQUEIDENTIFIER,
     FOREIGN KEY (TaskId) REFERENCES TaskP(Id) ON DELETE CASCADE
-);
-
--- Table: TaskSprint
-CREATE TABLE TaskSprint (
-    Id UNIQUEIDENTIFIER PRIMARY KEY,
-    UpdateStartDate DATETIME,
-    UpdatedEndDate DATETIME,
-    SprintId UNIQUEIDENTIFIER,
-    TaskId UNIQUEIDENTIFIER,
-    FOREIGN KEY (SprintId) REFERENCES Sprint(Id) ON DELETE CASCADE,
-    FOREIGN KEY (TaskId) REFERENCES TaskP(Id) ON DELETE NO ACTION
 );
