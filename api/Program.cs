@@ -60,7 +60,7 @@ builder.Services.AddScoped<IWorkFlowRepository, WorkFlowRepository>();
 builder.Services.AddScoped<IProjectMemberRepository, ProjectMemberRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ISprintRepository, SprintRepository>();
-
+builder.Services.AddScoped<IBoardRepository, BoardRepository>();
 
 
 var app = builder.Build();
