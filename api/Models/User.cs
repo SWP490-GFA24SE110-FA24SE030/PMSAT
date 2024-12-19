@@ -17,6 +17,8 @@ public partial class User
 
     public string? Status { get; set; }
 
+    public virtual ICollection<ProjectMember> ProjectMembers { get; set; } = new List<ProjectMember>();
+
     public virtual ICollection<Repository> Repositories { get; set; } = new List<Repository>();
 
     public virtual ICollection<TaskP> TaskPAssignees { get; set; } = new List<TaskP>();
