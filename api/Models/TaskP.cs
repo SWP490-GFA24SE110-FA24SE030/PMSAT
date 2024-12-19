@@ -23,6 +23,8 @@ public partial class TaskP
 
     public Guid? ProjectId { get; set; }
 
+    public Guid? SprintId { get; set; }
+
     public Guid? StatusId { get; set; }
 
     public virtual User? Assignee { get; set; }
@@ -32,6 +34,8 @@ public partial class TaskP
     public virtual Project? Project { get; set; }
 
     public virtual User? Reporter { get; set; }
+
+    public virtual Sprint? Sprint { get; set; }
 
     public virtual Board? Status { get; set; }
 

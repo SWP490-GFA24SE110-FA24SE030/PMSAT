@@ -39,9 +39,6 @@ namespace api.Repository
             {
                 Id = Guid.NewGuid(),
                 Title = createProjectDto.Title,
-                Description = createProjectDto.Description,
-                CreatedAt = DateTime.Now,
-                Status = "Active"
             };
 
             // Add the project to the database
@@ -51,7 +48,6 @@ namespace api.Repository
             // Create a new ProjectMember entry for the user (who created project) as the Leader
             var newProjectMember = new ProjectMember
             {
-                Id = Guid.NewGuid(),
                 Role = "Leader",
                 UserId = userId,
                 ProjectId = newProject.Id
@@ -100,7 +96,6 @@ namespace api.Repository
             return await _context.Projects
                 .Include(t => t.TaskPs)
                 .Include(s => s.Sprints)
-                .Include(pm => pm.ProjectMembers)
                 .ToListAsync();
         }
 
@@ -125,7 +120,6 @@ namespace api.Repository
         {
             return await _context.Projects
                 .Include(t => t.TaskPs)
-                .Include(pm => pm.ProjectMembers)
                 .FirstOrDefaultAsync(i => i.Id == id);
         }
 
@@ -152,8 +146,6 @@ namespace api.Repository
             }
 
             existingProject.Title = projectDto.Title;
-            existingProject.Description = projectDto.Description;
-            existingProject.Status = projectDto.Status;
 
             await _context.SaveChangesAsync();
             return existingProject;

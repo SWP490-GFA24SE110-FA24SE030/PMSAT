@@ -14,11 +14,7 @@ namespace api.Mappers
             return new TaskDto
             {
                 Id = taskModel.Id,
-                Status = taskModel.Status,
-                Description = taskModel.Description,
-                StartDate = taskModel.StartDate,
-                EndDate = taskModel.EndDate,
-                
+                Description = taskModel.Description,                
             };
         }
 
@@ -27,12 +23,8 @@ namespace api.Mappers
             return new TaskP
             {
                 Id = Guid.NewGuid(),
-                Status = taskDto.Status,
-                Name = taskDto.Name,
                 Description = taskDto.Description,
                 Priority = taskDto.Priority,
-                StartDate = taskDto.StartDate,
-                EndDate = taskDto.EndDate,
                 ProjectId = projectId
             };
         }

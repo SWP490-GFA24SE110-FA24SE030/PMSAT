@@ -18,7 +18,6 @@ namespace api.Mappers
                 Name = sprintModel.Name,
                 StartDate = sprintModel.StartDate,
                 EndDate = sprintModel.EndDate,
-                Status = sprintModel.Status
             };
         }
 
@@ -30,9 +29,7 @@ namespace api.Mappers
                 Name = request.Name,
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
-                Status = "Planned", // Initial status
                 ProjectId = projectId,
-                TaskSprints = new List<TaskSprint>()
             };
         }
     }

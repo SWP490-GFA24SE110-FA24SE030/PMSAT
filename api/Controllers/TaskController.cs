@@ -113,80 +113,52 @@ namespace api.Controllers
             return Ok(new { Message = "Task created successfully." });
         }
 
-        //[HttpPut("{taskId}/status")]
-        //public async Task<IActionResult> EditTaskStatus([FromRoute] Guid taskId, [FromBody] UpdateTaskStatusDto statusDto)
+        //[HttpPut("{taskId}")]
+        //public async Task<IActionResult> Update([FromRoute] Guid taskId, [FromBody] UpdateTaskDto taskDto)
         //{
+        //    if (taskDto.StartDate > taskDto.EndDate)
+        //    {
+        //        return BadRequest("End date must be greater than or equal to start date.");
+        //    }
+
+        //    if (taskDto.StartDate < DateTime.Now)
+        //    {
+        //        return BadRequest("Start date cannot be in the past.");
+        //    }
+
         //    // Check if the task exists
-        //    var task = await _taskRepo.GetByIdAsync(taskId);
-        //    if (task == null)
+        //    var existingTask = await _taskRepo.GetByIdAsync(taskId);
+        //    if (existingTask == null)
         //    {
         //        return NotFound("Task not found.");
         //    }
 
+        //    // Update task properties
+        //    existingTask.Status = taskDto.Status;
+        //    existingTask.Name = taskDto.Name;
+        //    existingTask.Description = taskDto.Description;
+        //    existingTask.Priority = taskDto.Priority;
+        //    existingTask.StartDate = taskDto.StartDate;
+        //    existingTask.EndDate = taskDto.EndDate;
+
+        //    await _taskRepo.UpdateAsync(existingTask);
+
         //    // Get the current status from the latest workflow entry for this task
-        //    var latestWorkflow = await _workflowRepo.GetLatestWorkflowForTaskAsync(task.Id);
+        //    var latestWorkflow = await _workflowRepo.GetLatestWorkflowForTaskAsync(existingTask.Id);
 
         //    // Save workflow history
         //    var newWorkflow = new Workflow
         //    {
         //        Id = Guid.NewGuid(),
-        //        TaskId = task.Id,
+        //        TaskId = existingTask.Id,
         //        OldStatus = latestWorkflow?.CurrentStatus ?? "To-Do", // Default to "To-Do" if no prior status
-        //        CurrentStatus = statusDto.NewStatus,
-        //        NewStatus = statusDto.NewStatus,
+        //        CurrentStatus = taskDto.Status,
+        //        NewStatus = taskDto.Status,
         //        UpdatedAt = DateTime.Now
         //    };
         //    await _workflowRepo.CreateAsync(newWorkflow);
-
-        //    return Ok(new { Message = "Task status updated successfully.", Workflow = newWorkflow });
+        //    return Ok(new { Message = "Task updated successfully."});
         //}
-
-        [HttpPut("{taskId}")]
-        public async Task<IActionResult> Update([FromRoute] Guid taskId, [FromBody] UpdateTaskDto taskDto)
-        {
-            if (taskDto.StartDate > taskDto.EndDate)
-            {
-                return BadRequest("End date must be greater than or equal to start date.");
-            }
-
-            if (taskDto.StartDate < DateTime.Now)
-            {
-                return BadRequest("Start date cannot be in the past.");
-            }
-
-            // Check if the task exists
-            var existingTask = await _taskRepo.GetByIdAsync(taskId);
-            if (existingTask == null)
-            {
-                return NotFound("Task not found.");
-            }
-
-            // Update task properties
-            existingTask.Status = taskDto.Status;
-            existingTask.Name = taskDto.Name;
-            existingTask.Description = taskDto.Description;
-            existingTask.Priority = taskDto.Priority;
-            existingTask.StartDate = taskDto.StartDate;
-            existingTask.EndDate = taskDto.EndDate;
-
-            await _taskRepo.UpdateAsync(existingTask);
-
-            // Get the current status from the latest workflow entry for this task
-            var latestWorkflow = await _workflowRepo.GetLatestWorkflowForTaskAsync(existingTask.Id);
-
-            // Save workflow history
-            var newWorkflow = new Workflow
-            {
-                Id = Guid.NewGuid(),
-                TaskId = existingTask.Id,
-                OldStatus = latestWorkflow?.CurrentStatus ?? "To-Do", // Default to "To-Do" if no prior status
-                CurrentStatus = taskDto.Status,
-                NewStatus = taskDto.Status,
-                UpdatedAt = DateTime.Now
-            };
-            await _workflowRepo.CreateAsync(newWorkflow);
-            return Ok(new { Message = "Task updated successfully."});
-        }
 
         [HttpPost("LeaderID={leaderId}/assign/TaskID={taskId}")]
         public async Task<IActionResult> AssignTaskToMember([FromRoute] Guid leaderId, [FromRoute] Guid taskId, [FromBody] AssignTaskToMemberDto taskAssignment)
