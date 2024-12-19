@@ -45,7 +45,6 @@ namespace api.Repository
                 Name = sprint.Name,
                 StartDate = sprint.StartDate,
                 EndDate = sprint.EndDate,
-                Status = sprint.Status
             }).ToListAsync();
         }
 

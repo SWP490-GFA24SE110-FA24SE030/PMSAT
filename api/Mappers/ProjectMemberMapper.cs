@@ -9,7 +9,6 @@ namespace api.Mappers
         {
             return new ProjectMemberDto
             {
-                Id = projectmemberModel.Id,
                 Role = projectmemberModel.Role,
             };
         }

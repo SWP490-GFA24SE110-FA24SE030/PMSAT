@@ -15,12 +15,8 @@ namespace api.Mappers
             {
                 Id = projectModel.Id,
                 Title = projectModel.Title,
-                Description = projectModel.Description,
-                CreatedAt = projectModel.CreatedAt,
-                Status = projectModel.Status,
                 TaskPs = projectModel.TaskPs.Select(t => t.ToTaskDto()).ToList(),
                 Sprints = projectModel.Sprints.Select(s => s.ToSprintDto()).ToList(),
-                ProjectMembers = projectModel.ProjectMembers.Select(pm => pm.ToProjectMemberDto()).ToList(),
             };
         }
 
@@ -30,9 +26,6 @@ namespace api.Mappers
             {
                 Id = Guid.NewGuid(),
                 Title = projectDto.Title,
-                Description = projectDto.Description,
-                CreatedAt = DateTime.Now,
-                Status = "Active"
             };
         }
     }

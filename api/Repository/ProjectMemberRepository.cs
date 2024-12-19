@@ -32,7 +32,6 @@ namespace api.Repository
             // Create a new ProjectMember entity
             var projectMember = new ProjectMember
             {
-                Id = Guid.NewGuid(),
                 Role = projectMemberDto.Role,
                 UserId = user.Id, // Set the UserId from the found user
                 ProjectId = projectId
@@ -46,13 +45,7 @@ namespace api.Repository
 
         public async Task<ProjectMember> DeleteByIdAsync(Guid id)
         {
-            var projectMemberModel = await _context.ProjectMembers.FirstOrDefaultAsync(x => x.Id == id);
-
-            _context.ProjectMembers.Remove(projectMemberModel);
-
-            await _context.SaveChangesAsync();
-
-            return projectMemberModel;
+            throw new NotImplementedException();
         }
 
         public async Task<List<ProjectMember>> GetProjectMembersFromProjectAsync(Guid projectId)
