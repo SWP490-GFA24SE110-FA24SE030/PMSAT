@@ -9,7 +9,5 @@ namespace api.Dtos.Project
     {
         public string? Title { get; set; }
 
-    public string? Description { get; set; }
-
     }
 }
