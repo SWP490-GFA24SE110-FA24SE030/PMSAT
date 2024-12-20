@@ -23,8 +23,11 @@ namespace api.Mappers
             return new TaskP
             {
                 Id = Guid.NewGuid(),
+                Title = taskDto.Title,
                 Description = taskDto.Description,
                 Priority = taskDto.Priority,
+                Created = DateTime.Now,
+                Updated = DateTime.Now,
                 ProjectId = projectId
             };
         }

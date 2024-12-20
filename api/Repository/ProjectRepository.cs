@@ -57,6 +57,33 @@ namespace api.Repository
             _context.ProjectMembers.Add(newProjectMember);
             await _context.SaveChangesAsync();
 
+            // Create a new default Board (To-Do ; In Progress ; Done)
+            var defaultBoards = new List<Board>
+            {
+                new Board
+                {
+                    Id = Guid.NewGuid(),
+                    Status = "To-Do",
+                    ProjectId = newProject.Id
+                },
+                new Board
+                {
+                    Id = Guid.NewGuid(),
+                    Status = "In Progress",
+                    ProjectId = newProject.Id
+                },
+                new Board
+                {
+                    Id = Guid.NewGuid(),
+                    Status = "Done",
+                    ProjectId = newProject.Id
+                }
+            };
+
+            // Add the default boards to the database
+            await _context.Boards.AddRangeAsync(defaultBoards);
+            await _context.SaveChangesAsync();
+
             return newProject.Id;
         }
 
@@ -94,8 +121,11 @@ namespace api.Repository
         public async Task<List<Project>> GetAllAsync()
         {
             return await _context.Projects
-                .Include(t => t.TaskPs)
+                .Include(a => a.AnalysisResults)
+                .Include(b => b.Boards)
+                .Include(pm => pm.ProjectMembers)
                 .Include(s => s.Sprints)
+                .Include(t => t.TaskPs)
                 .ToListAsync();
         }
 
@@ -119,6 +149,10 @@ namespace api.Repository
         public async Task<Project?> GetByIdAsync(Guid id)
         {
             return await _context.Projects
+                .Include(a => a.AnalysisResults)
+                .Include(b => b.Boards)
+                .Include(pm => pm.ProjectMembers)
+                .Include(s => s.Sprints)
                 .Include(t => t.TaskPs)
                 .FirstOrDefaultAsync(i => i.Id == id);
         }
@@ -138,6 +172,7 @@ namespace api.Repository
 
         public async Task<Project?> UpdateByIdAsync(Guid id, UpdateProjectRequestDto projectDto)
         {
+            // Retrieve the project from the database
             var existingProject = await _context.Projects.FirstOrDefaultAsync(x => x.Id == id);
 
             if (existingProject == null)

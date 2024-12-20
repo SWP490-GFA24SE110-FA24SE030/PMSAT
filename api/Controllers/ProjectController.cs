@@ -27,9 +27,9 @@ namespace api.Controllers
         {
             var projects = await _projectRepo.GetAllAsync(); 
 
-            var projectDto = projects.Select(s => s.ToProjectDto());
+            //var projectDto = projects.Select(s => s.ToProjectDto());
 
-            return Ok(projectDto);
+            return Ok(projects);
         }
 
         [HttpGet("uid={userId}/all")]
@@ -66,7 +66,7 @@ namespace api.Controllers
                 return NotFound();
             }
 
-            return Ok(project.ToProjectDto());
+            return Ok(project);
         }
 
         [HttpGet("title={title}")]
@@ -93,16 +93,6 @@ namespace api.Controllers
                 return StatusCode(500, "An internal server error occurred.");
             }
         }
-
-        //[HttpPost("new")]
-        //public async Task<IActionResult> Create([FromBody] CreateProjectRequestDto projectDto) 
-        //{
-        //    var projectModel = projectDto.ToProjectFromCreateDto();
-
-        //    await _projectRepo.CreateAsync(projectModel);
-
-        //    return CreatedAtAction(nameof(GetById), new { id = projectModel.Id}, projectModel.ToProjectDto());
-        //}
 
         [HttpPost("uid={userId}/new")]
         public async Task<IActionResult> CreateProject([FromRoute] Guid userId, [FromBody] CreateProjectRequestDto createProjectDto)
@@ -133,8 +123,9 @@ namespace api.Controllers
             {
                 return NotFound();
             }
-            return Ok();
+            return Ok(new { Message = "Project(s) updated successfully." });
         }
+
         [HttpDelete]
         [Route("delete/prjid={id}")]
         public async Task<IActionResult> DeleteByIdAsync([FromRoute] Guid id)

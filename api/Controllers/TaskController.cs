@@ -79,16 +79,6 @@ namespace api.Controllers
                 return BadRequest("Project does not exist!");
             }
 
-            if (taskDto.StartDate > taskDto.EndDate)
-            {
-                return BadRequest("End date must be greater than or equal to start date.");
-            }
-
-            if (taskDto.StartDate < DateTime.Now)
-            {
-                return BadRequest("Start date cannot be in the past.");
-            }
-
             // Create the Task entity from the DTO
             var taskModel = taskDto.ToTaskFromCreate(projectId);
 

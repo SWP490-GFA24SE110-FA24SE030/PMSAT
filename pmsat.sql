@@ -24,9 +24,10 @@ CREATE TABLE Project (
 
 -- Table: ProjectMember
 CREATE TABLE ProjectMember (
-    Role NVARCHAR(50), --leader, ...
-    UserId UNIQUEIDENTIFIER,
-    ProjectId UNIQUEIDENTIFIER,
+    Role NVARCHAR(50), -- leader, member, etc.
+    UserId UNIQUEIDENTIFIER NOT NULL,
+    ProjectId UNIQUEIDENTIFIER NOT NULL,
+    PRIMARY KEY (UserId, ProjectId), -- Composite primary key
     FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE,
     FOREIGN KEY (ProjectId) REFERENCES Project(Id) ON DELETE CASCADE
 );
