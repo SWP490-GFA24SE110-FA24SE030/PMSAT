@@ -61,5 +61,10 @@ namespace api.Repository
             await _context.SaveChangesAsync();
             return board;
         }
+
+        public async Task<Board> GetByIdAsync(Guid id)
+        {
+            return await _context.Boards.FirstOrDefaultAsync(b => b.Id == id);
+        }
     }
 }

@@ -7,6 +7,7 @@ using api.Interfaces;
 using api.Mappers;
 using api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
@@ -137,6 +138,41 @@ namespace api.Controllers
         //    await _workflowRepo.CreateAsync(newWorkflow);
         //    return Ok(new { Message = "Task updated successfully."});
         //}
+
+        [HttpPut("tsk={taskId}/updateStatus")]
+        public async Task<IActionResult> UpdateTaskStatus([FromRoute] Guid taskId, [FromBody] string status)
+        {
+            var task = await _taskRepo.GetByIdAsync(taskId);
+            if(task == null)
+            {
+                return NotFound();
+            }
+            var statusModel =  await _taskRepo.UpdateTaskStatusAsync(taskId, status);
+            return Ok(statusModel);
+        }
+
+        [HttpPut("tsk={taskId}/changeBoard/brd={boardId}")]
+        public async Task<IActionResult> ChangeBoard([FromRoute] Guid taskId, [FromRoute] Guid boardId)
+        {
+            // Check if the task exists
+            var task = await _taskRepo.GetByIdAsync(taskId);
+            if (task == null)
+            {
+                return NotFound($"Task with ID {taskId} not found.");
+            }
+
+            // Check if the board exists
+            var board = await _boardRepo.GetByIdAsync(boardId);
+            if (board == null)
+            {
+                return NotFound($"Board with ID {boardId} not found.");
+            }
+
+            var status = board.Status;
+            await _taskRepo.ChangeBoard(taskId,boardId);
+            await _taskRepo.UpdateTaskStatusAsync(taskId,status);
+            return Ok(new { Message = "sucess" });
+        }
 
         [HttpPost("LeaderID={leaderId}/assign/TaskID={taskId}")]
         public async Task<IActionResult> AssignTaskToMember([FromRoute] Guid leaderId, [FromRoute] Guid taskId, [FromBody] AssignTaskToMemberDto taskAssignment)

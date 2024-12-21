@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using api.Dtos.Task;
 using api.Interfaces;
 using api.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -58,6 +61,14 @@ namespace api.Repository
             //task.ProjectMemberId = projectMember.Id; // Update task with project member ID
             await _context.SaveChangesAsync();
             return "Success"; 
+        }
+
+        public async Task<Board> ChangeBoard(Guid taskId, Guid boardId)
+        {
+            var task = await _context.TaskPs.FirstOrDefaultAsync(t => t.Id == taskId);
+            task.BoardId = boardId;
+            await _context.SaveChangesAsync();
+            return await _context.Boards.FirstOrDefaultAsync(b => b.Id == boardId);
         }
 
         public async Task<TaskP> CreateAsync(TaskP taskModel)
@@ -116,6 +127,15 @@ namespace api.Repository
         {
             _context.TaskPs.Update(task);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<string> UpdateTaskStatusAsync(Guid taskId, string status)
+        { 
+            var task = await _context.TaskPs.FirstOrDefaultAsync(t => t.Id == taskId);
+            
+            task.Status = status;
+            await _context.SaveChangesAsync();
+            return status;
         }
     }
 }

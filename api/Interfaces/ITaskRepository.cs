@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using api.Dtos.Task;
 using api.Models;
+using Microsoft.AspNetCore.Mvc;
 
 
 
@@ -15,6 +16,8 @@ namespace api.Interfaces
         Task<List<TaskP>> GetTasksFromProjectAsync(Guid projectId);
         Task<TaskP> CreateAsync(TaskP taskModel);
         Task UpdateAsync(TaskP task);
+        Task<string> UpdateTaskStatusAsync(Guid taskId, string status);
+        Task<Board> ChangeBoard(Guid taskId, Guid boardId);
         Task<string> AssignTaskToMemberAsync(Guid leaderId, Guid taskId, string email);
         Task<TaskP> DeleteByIdAsync(Guid id);
     }
