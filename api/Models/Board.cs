@@ -7,6 +7,8 @@ public partial class Board
 {
     public Guid Id { get; set; }
 
+    public int? Orders { get; set; }
+
     public string? Status { get; set; }
 
     public Guid? ProjectId { get; set; }

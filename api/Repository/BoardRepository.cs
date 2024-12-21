@@ -33,6 +33,14 @@ namespace api.Repository
             return true;
         }
 
+        public async Task<string> GetFirstBoardStatusByProjectIdAsync(Guid projectId)
+        {
+            var board = await _context.Boards
+                        .FirstOrDefaultAsync(b => b.ProjectId == projectId && b.Orders == 1);
+            var status = board.Status;
+            return status;
+        }
+
         public async Task<List<Board>> GetByProjectIdAsync(Guid projectId)
         {
             return await _context.Boards

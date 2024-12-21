@@ -16,13 +16,13 @@ namespace api.Controllers
     {
         private readonly ITaskRepository _taskRepo;
         private readonly IProjectRepository _projectRepo;
-        private readonly IWorkFlowRepository _workflowRepo;
+        private readonly IBoardRepository _boardRepo;
 
-        public TaskController(ITaskRepository taskRepo, IProjectRepository projectRepo, IWorkFlowRepository workflowRepo)
+        public TaskController(ITaskRepository taskRepo, IProjectRepository projectRepo, IBoardRepository boardRepo)
         {
             _taskRepo = taskRepo;
             _projectRepo = projectRepo;
-            _workflowRepo = workflowRepo;
+            _boardRepo = boardRepo;
         }
 
         [HttpGet]
@@ -79,8 +79,10 @@ namespace api.Controllers
                 return BadRequest("Project does not exist!");
             }
 
+            var status = await _boardRepo.GetFirstBoardStatusByProjectIdAsync(projectId);
+
             // Create the Task entity from the DTO
-            var taskModel = taskDto.ToTaskFromCreate(projectId);
+            var taskModel = taskDto.ToTaskFromCreate(projectId,status);
 
             // Save the Task entity
             await _taskRepo.CreateAsync(taskModel);

@@ -18,7 +18,7 @@ namespace api.Mappers
             };
         }
 
-        public static TaskP ToTaskFromCreate(this CreateTaskDto taskDto, Guid projectId) 
+        public static TaskP ToTaskFromCreate(this CreateTaskDto taskDto, Guid projectId, string status) 
         {
             return new TaskP
             {
@@ -28,7 +28,7 @@ namespace api.Mappers
                 Priority = 0,
                 Created = DateTime.Now,
                 Updated = DateTime.Now,
-                Status = "To-Do",
+                Status = status,
                 ProjectId = projectId
             };
         }
