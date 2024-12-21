@@ -40,4 +40,6 @@ public partial class TaskP
     public virtual Board? Status { get; set; }
 
     public virtual ICollection<Workflow> Workflows { get; set; } = new List<Workflow>();
+
+    public virtual ICollection<Tag> Tags { get; set; } = new List<Tag>();
 }
