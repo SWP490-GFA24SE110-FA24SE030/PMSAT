@@ -17,6 +17,8 @@ public partial class TaskP
 
     public DateTime? Updated { get; set; }
 
+    public string? Status { get; set; }
+
     public Guid? ReporterId { get; set; }
 
     public Guid? AssigneeId { get; set; }
@@ -25,9 +27,11 @@ public partial class TaskP
 
     public Guid? SprintId { get; set; }
 
-    public Guid? StatusId { get; set; }
+    public Guid? BoardId { get; set; }
 
     public virtual User? Assignee { get; set; }
+
+    public virtual Board? Board { get; set; }
 
     public virtual ICollection<Issue> Issues { get; set; } = new List<Issue>();
 
@@ -37,7 +41,7 @@ public partial class TaskP
 
     public virtual Sprint? Sprint { get; set; }
 
-    public virtual Board? Status { get; set; }
-
     public virtual ICollection<Workflow> Workflows { get; set; } = new List<Workflow>();
+
+    public virtual ICollection<Tag> Tags { get; set; } = new List<Tag>();
 }

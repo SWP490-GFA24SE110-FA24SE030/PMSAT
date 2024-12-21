@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using api.Dtos.Task;
 using api.Interfaces;
 using api.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -60,6 +63,14 @@ namespace api.Repository
             return "Success"; 
         }
 
+        public async Task<Board> ChangeBoard(Guid taskId, Guid boardId)
+        {
+            var task = await _context.TaskPs.FirstOrDefaultAsync(t => t.Id == taskId);
+            task.BoardId = boardId;
+            await _context.SaveChangesAsync();
+            return await _context.Boards.FirstOrDefaultAsync(b => b.Id == boardId);
+        }
+
         public async Task<TaskP> CreateAsync(TaskP taskModel)
         {
             await _context.TaskPs.AddAsync(taskModel);
@@ -81,8 +92,8 @@ namespace api.Repository
         public async Task<List<TaskP>> GetAllAsync()
         {
             return await _context.TaskPs
-                .Include(t => t.Workflows)
                 .Include(t => t.Issues)
+                .Include(t => t.Tags)
                 .ToListAsync();
         }
 
@@ -90,7 +101,6 @@ namespace api.Repository
         {
             var task = await _context.TaskPs
                     .Where(t => t.Id == id)
-                    .Include(t => t.Workflows)
                     .Include(t => t.Issues)
                     .FirstOrDefaultAsync();
             return task;
@@ -108,7 +118,6 @@ namespace api.Repository
             // Fetch all tasks related to the project
             var tasks = await _context.TaskPs
                 .Where(t => t.ProjectId == projectId)
-                .Include(t => t.Workflows) // to display task's status workflows
                 .ToListAsync();
 
             return tasks;
@@ -118,6 +127,15 @@ namespace api.Repository
         {
             _context.TaskPs.Update(task);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<string> UpdateTaskStatusAsync(Guid taskId, string status)
+        { 
+            var task = await _context.TaskPs.FirstOrDefaultAsync(t => t.Id == taskId);
+            
+            task.Status = status;
+            await _context.SaveChangesAsync();
+            return status;
         }
     }
 }

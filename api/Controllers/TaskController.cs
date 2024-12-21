@@ -7,6 +7,7 @@ using api.Interfaces;
 using api.Mappers;
 using api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
@@ -16,13 +17,13 @@ namespace api.Controllers
     {
         private readonly ITaskRepository _taskRepo;
         private readonly IProjectRepository _projectRepo;
-        private readonly IWorkFlowRepository _workflowRepo;
+        private readonly IBoardRepository _boardRepo;
 
-        public TaskController(ITaskRepository taskRepo, IProjectRepository projectRepo, IWorkFlowRepository workflowRepo)
+        public TaskController(ITaskRepository taskRepo, IProjectRepository projectRepo, IBoardRepository boardRepo)
         {
             _taskRepo = taskRepo;
             _projectRepo = projectRepo;
-            _workflowRepo = workflowRepo;
+            _boardRepo = boardRepo;
         }
 
         [HttpGet]
@@ -79,25 +80,13 @@ namespace api.Controllers
                 return BadRequest("Project does not exist!");
             }
 
+            var status = await _boardRepo.GetFirstBoardStatusByProjectIdAsync(projectId);
+
             // Create the Task entity from the DTO
-            var taskModel = taskDto.ToTaskFromCreate(projectId);
+            var taskModel = taskDto.ToTaskFromCreate(projectId,status);
 
             // Save the Task entity
             await _taskRepo.CreateAsync(taskModel);
-
-            // Create an initial Workflow entry for the task
-            var workflowModel = new Workflow
-            {
-                Id = Guid.NewGuid(),
-                OldStatus = "default",
-                CurrentStatus = "To-Do",
-                NewStatus = "To-Do",
-                UpdatedAt = DateTime.Now,
-                TaskId = taskModel.Id,
-            };
-
-            // Save the Workflow entity
-            await _workflowRepo.CreateAsync(workflowModel);
 
             //return CreatedAtAction(nameof(GetById), new {id = taskModel}, taskModel.ToTaskDto());
             return Ok(new { Message = "Task created successfully." });
@@ -149,6 +138,41 @@ namespace api.Controllers
         //    await _workflowRepo.CreateAsync(newWorkflow);
         //    return Ok(new { Message = "Task updated successfully."});
         //}
+
+        [HttpPut("tsk={taskId}/updateStatus")]
+        public async Task<IActionResult> UpdateTaskStatus([FromRoute] Guid taskId, [FromBody] string status)
+        {
+            var task = await _taskRepo.GetByIdAsync(taskId);
+            if(task == null)
+            {
+                return NotFound();
+            }
+            var statusModel =  await _taskRepo.UpdateTaskStatusAsync(taskId, status);
+            return Ok(statusModel);
+        }
+
+        [HttpPut("tsk={taskId}/changeBoard/brd={boardId}")]
+        public async Task<IActionResult> ChangeBoard([FromRoute] Guid taskId, [FromRoute] Guid boardId)
+        {
+            // Check if the task exists
+            var task = await _taskRepo.GetByIdAsync(taskId);
+            if (task == null)
+            {
+                return NotFound($"Task with ID {taskId} not found.");
+            }
+
+            // Check if the board exists
+            var board = await _boardRepo.GetByIdAsync(boardId);
+            if (board == null)
+            {
+                return NotFound($"Board with ID {boardId} not found.");
+            }
+
+            var status = board.Status;
+            await _taskRepo.ChangeBoard(taskId,boardId);
+            await _taskRepo.UpdateTaskStatusAsync(taskId,status);
+            return Ok(new { Message = "sucess" });
+        }
 
         [HttpPost("LeaderID={leaderId}/assign/TaskID={taskId}")]
         public async Task<IActionResult> AssignTaskToMember([FromRoute] Guid leaderId, [FromRoute] Guid taskId, [FromBody] AssignTaskToMemberDto taskAssignment)

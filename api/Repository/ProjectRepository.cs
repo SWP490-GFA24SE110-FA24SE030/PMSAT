@@ -63,18 +63,21 @@ namespace api.Repository
                 new Board
                 {
                     Id = Guid.NewGuid(),
+                    Orders = 1,
                     Status = "To-Do",
                     ProjectId = newProject.Id
                 },
                 new Board
                 {
                     Id = Guid.NewGuid(),
+                    Orders = 2,
                     Status = "In Progress",
                     ProjectId = newProject.Id
                 },
                 new Board
                 {
                     Id = Guid.NewGuid(),
+                    Orders = 3,
                     Status = "Done",
                     ProjectId = newProject.Id
                 }

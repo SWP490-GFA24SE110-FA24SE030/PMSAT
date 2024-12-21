@@ -18,16 +18,17 @@ namespace api.Mappers
             };
         }
 
-        public static TaskP ToTaskFromCreate(this CreateTaskDto taskDto, Guid projectId) 
+        public static TaskP ToTaskFromCreate(this CreateTaskDto taskDto, Guid projectId, string status) 
         {
             return new TaskP
             {
                 Id = Guid.NewGuid(),
                 Title = taskDto.Title,
-                Description = taskDto.Description,
-                Priority = taskDto.Priority,
+                Description = "",
+                Priority = 0,
                 Created = DateTime.Now,
                 Updated = DateTime.Now,
+                Status = status,
                 ProjectId = projectId
             };
         }
