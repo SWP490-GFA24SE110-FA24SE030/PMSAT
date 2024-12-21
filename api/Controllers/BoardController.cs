@@ -1,5 +1,6 @@
 ﻿using api.Dtos.Board;
 using api.Interfaces;
+using api.Mappers;
 using api.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +21,8 @@ namespace api.Controllers
         public async Task<IActionResult> GetBoardsByProject([FromRoute] Guid projectId)
         {
             var boards = await _boardRepo.GetByProjectIdAsync(projectId);
-            return Ok(boards);
+            var boardDto = boards.Select(b => b.ToBoardDto());
+            return Ok(boardDto);
         }
 
         [HttpPost("prjid={projectId}/new")]
