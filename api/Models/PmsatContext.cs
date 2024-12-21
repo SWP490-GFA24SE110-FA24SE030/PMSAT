@@ -49,7 +49,7 @@ public partial class PmsatContext : DbContext
     {
         modelBuilder.Entity<AnalysisResult>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Analysis__3214EC07A80EDA65");
+            entity.HasKey(e => e.Id).HasName("PK__Analysis__3214EC07BB5BCCF3");
 
             entity.ToTable("AnalysisResult");
 
@@ -69,7 +69,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<Board>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Board__3214EC07DCCBD77D");
+            entity.HasKey(e => e.Id).HasName("PK__Board__3214EC074FD4999E");
 
             entity.ToTable("Board");
 
@@ -84,7 +84,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<Commit>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Commits__3214EC07D3D375A5");
+            entity.HasKey(e => e.Id).HasName("PK__Commits__3214EC07E7EC3911");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
@@ -98,7 +98,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<Issue>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Issue__3214EC07AD18383B");
+            entity.HasKey(e => e.Id).HasName("PK__Issue__3214EC070875563B");
 
             entity.ToTable("Issue");
 
@@ -114,7 +114,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<Project>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Project__3214EC074EBE9AE8");
+            entity.HasKey(e => e.Id).HasName("PK__Project__3214EC07097E226F");
 
             entity.ToTable("Project");
 
@@ -124,7 +124,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<ProjectMember>(entity =>
         {
-            entity.HasKey(e => new { e.UserId, e.ProjectId }).HasName("PK__ProjectM__00E967A3C06E65B6");
+            entity.HasKey(e => new { e.UserId, e.ProjectId }).HasName("PK__ProjectM__00E967A3E3CA6100");
 
             entity.ToTable("ProjectMember");
 
@@ -141,7 +141,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<PullRequest>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PullRequ__3214EC07C88C1BA4");
+            entity.HasKey(e => e.Id).HasName("PK__PullRequ__3214EC07081C1540");
 
             entity.ToTable("PullRequest");
 
@@ -161,7 +161,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<Repository>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Reposito__3214EC07D5DBBE6C");
+            entity.HasKey(e => e.Id).HasName("PK__Reposito__3214EC07D101D996");
 
             entity.ToTable("Repository");
 
@@ -178,7 +178,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<Sprint>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Sprint__3214EC078EF0AC52");
+            entity.HasKey(e => e.Id).HasName("PK__Sprint__3214EC0703A2F452");
 
             entity.ToTable("Sprint");
 
@@ -195,7 +195,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<Tag>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tag__3214EC076892E215");
+            entity.HasKey(e => e.Id).HasName("PK__Tag__3214EC0750890A52");
 
             entity.ToTable("Tag");
 
@@ -205,19 +205,24 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<TaskP>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__TaskP__3214EC073D8B1BB3");
+            entity.HasKey(e => e.Id).HasName("PK__TaskP__3214EC07D4C3E2F1");
 
             entity.ToTable("TaskP");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Created).HasColumnType("datetime");
             entity.Property(e => e.Description).HasMaxLength(255);
+            entity.Property(e => e.Status).HasMaxLength(50);
             entity.Property(e => e.Title).HasMaxLength(50);
             entity.Property(e => e.Updated).HasColumnType("datetime");
 
             entity.HasOne(d => d.Assignee).WithMany(p => p.TaskPAssignees)
                 .HasForeignKey(d => d.AssigneeId)
                 .HasConstraintName("FK__TaskP__AssigneeI__5165187F");
+
+            entity.HasOne(d => d.Board).WithMany(p => p.TaskPs)
+                .HasForeignKey(d => d.BoardId)
+                .HasConstraintName("FK__TaskP__BoardId__5441852A");
 
             entity.HasOne(d => d.Project).WithMany(p => p.TaskPs)
                 .HasForeignKey(d => d.ProjectId)
@@ -232,10 +237,6 @@ public partial class PmsatContext : DbContext
                 .HasForeignKey(d => d.SprintId)
                 .HasConstraintName("FK__TaskP__SprintId__534D60F1");
 
-            entity.HasOne(d => d.Status).WithMany(p => p.TaskPs)
-                .HasForeignKey(d => d.StatusId)
-                .HasConstraintName("FK__TaskP__StatusId__5441852A");
-
             entity.HasMany(d => d.Tags).WithMany(p => p.Tasks)
                 .UsingEntity<Dictionary<string, object>>(
                     "TaskTag",
@@ -249,14 +250,14 @@ public partial class PmsatContext : DbContext
                         .HasConstraintName("FK__TaskTag__TaskId__59063A47"),
                     j =>
                     {
-                        j.HasKey("TaskId", "TagId").HasName("PK__TaskTag__AA3E862B435B3FB1");
+                        j.HasKey("TaskId", "TagId").HasName("PK__TaskTag__AA3E862BB6E2B2DE");
                         j.ToTable("TaskTag");
                     });
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC072ECF6AC6");
+            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC0791B9EE35");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Email).HasMaxLength(255);
@@ -268,7 +269,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<Workflow>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Workflow__3214EC07F7703989");
+            entity.HasKey(e => e.Id).HasName("PK__Workflow__3214EC07736D93DD");
 
             entity.ToTable("Workflow");
 

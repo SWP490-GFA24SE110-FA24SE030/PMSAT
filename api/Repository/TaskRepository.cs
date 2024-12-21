@@ -83,6 +83,7 @@ namespace api.Repository
             return await _context.TaskPs
                 .Include(t => t.Workflows)
                 .Include(t => t.Issues)
+                .Include(t => t.Tags)
                 .ToListAsync();
         }
 
