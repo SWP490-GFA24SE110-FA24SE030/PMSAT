@@ -81,7 +81,6 @@ namespace api.Repository
         public async Task<List<TaskP>> GetAllAsync()
         {
             return await _context.TaskPs
-                .Include(t => t.Workflows)
                 .Include(t => t.Issues)
                 .Include(t => t.Tags)
                 .ToListAsync();
@@ -91,7 +90,6 @@ namespace api.Repository
         {
             var task = await _context.TaskPs
                     .Where(t => t.Id == id)
-                    .Include(t => t.Workflows)
                     .Include(t => t.Issues)
                     .FirstOrDefaultAsync();
             return task;
@@ -109,7 +107,6 @@ namespace api.Repository
             // Fetch all tasks related to the project
             var tasks = await _context.TaskPs
                 .Where(t => t.ProjectId == projectId)
-                .Include(t => t.Workflows) // to display task's status workflows
                 .ToListAsync();
 
             return tasks;

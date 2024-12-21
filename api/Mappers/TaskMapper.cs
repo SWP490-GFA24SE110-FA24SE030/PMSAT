@@ -24,10 +24,11 @@ namespace api.Mappers
             {
                 Id = Guid.NewGuid(),
                 Title = taskDto.Title,
-                Description = taskDto.Description,
-                Priority = taskDto.Priority,
+                Description = "",
+                Priority = 0,
                 Created = DateTime.Now,
                 Updated = DateTime.Now,
+                Status = "To-Do",
                 ProjectId = projectId
             };
         }

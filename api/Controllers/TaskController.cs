@@ -85,20 +85,6 @@ namespace api.Controllers
             // Save the Task entity
             await _taskRepo.CreateAsync(taskModel);
 
-            // Create an initial Workflow entry for the task
-            var workflowModel = new Workflow
-            {
-                Id = Guid.NewGuid(),
-                OldStatus = "default",
-                CurrentStatus = "To-Do",
-                NewStatus = "To-Do",
-                UpdatedAt = DateTime.Now,
-                TaskId = taskModel.Id,
-            };
-
-            // Save the Workflow entity
-            await _workflowRepo.CreateAsync(workflowModel);
-
             //return CreatedAtAction(nameof(GetById), new {id = taskModel}, taskModel.ToTaskDto());
             return Ok(new { Message = "Task created successfully." });
         }
