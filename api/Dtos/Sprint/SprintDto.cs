@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Dtos.Task;
 
 namespace api.Dtos.Sprint
 {
@@ -15,5 +16,6 @@ namespace api.Dtos.Sprint
         public DateTime? EndDate { get; set; }
 
         public string? Status { get; set; }
+        public virtual ICollection<TaskDto> TaskPs { get; set; } = new List<TaskDto>();
     }
 }

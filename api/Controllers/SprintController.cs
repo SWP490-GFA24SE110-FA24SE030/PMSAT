@@ -44,15 +44,36 @@ namespace api.Controllers
         public async Task<IActionResult> GetProjectPrint([FromRoute] Guid projectId)
         {
             var sprintsBelongToProject = await _sprintRepo.GetProjectSprint(projectId);
-            return Ok(sprintsBelongToProject);
+            return Ok(sprintsBelongToProject.Select(s => s.ToSprintDto()));
         }
+
+        [HttpPut("sprintId = {sprinId}/taskId = {taskId}/AddTaskToSprint")]
+        public async Task<IActionResult> AddTaskToSprint([FromRoute] Guid sprintId, [FromRoute] Guid taskId)
+        {
+            var task = await _taskRepo.GetByIdAsync(taskId);
+            if (task == null) 
+            {
+                return BadRequest("Task is not exist!");
+            }
+            if (await _sprintRepo.GetByIdAsync(sprintId) == null) 
+            {
+                return BadRequest("Task is not exist!");
+            }
+            if (task.SprintId == sprintId)
+            {
+                return BadRequest("This task is already assigned to the ongoing sprint.");
+            }
+            await _sprintRepo.AddTaskToSprint(sprintId, taskId);
+            return Ok("Add task successfuly!");
+        }
+
 
         [HttpPost("{projectId}")]
         public async Task<IActionResult> Create([FromRoute] Guid projectId, CreateSprintRequest request)
         {
             if(!await _projectRepo.ProjectExist(projectId))
             {
-                return BadRequest("Project does not exist!");
+                return BadRequest("Project is not exist!");
             }
 
             var sprintModel = request.ToSprintFromCreate(projectId);

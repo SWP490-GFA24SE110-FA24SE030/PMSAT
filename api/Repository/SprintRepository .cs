@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Dtos.Sprint;
 using api.Interfaces;
+using api.Mappers;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,14 +39,7 @@ namespace api.Repository
                 throw new ArgumentException("Invalid Id provided", nameof(projectId));
             }
 
-            return await _context.Sprints.Where(x => x.ProjectId == projectId)
-            .Select(sprint => new Sprint
-            {
-                Id = sprint.Id,
-                Name = sprint.Name,
-                StartDate = sprint.StartDate,
-                EndDate = sprint.EndDate,
-            }).ToListAsync();
+            return await _context.Sprints.Where(x => x.ProjectId == projectId).Include(t => t.TaskPs).ToListAsync();
         }
 
         public async Task<Sprint?> GetByIdAsync(Guid id)
@@ -61,6 +55,14 @@ namespace api.Repository
         public async Task<Sprint> GetByNameAsync(string sprintName)
         {
             return await _context.Sprints.FirstOrDefaultAsync(x => x.Name == sprintName);
+        }
+
+        public async Task<TaskP> AddTaskToSprint(Guid sprintId, Guid taskId)
+        {
+            var task = await _context.TaskPs.FirstOrDefaultAsync(t => t.Id == taskId);
+            task.SprintId = sprintId;
+            await _context.SaveChangesAsync();
+            return task;
         }
     }
 }

@@ -18,6 +18,7 @@ namespace api.Mappers
                 Name = sprintModel.Name,
                 StartDate = sprintModel.StartDate,
                 EndDate = sprintModel.EndDate,
+                TaskPs = sprintModel.TaskPs.Select(t => t.ToTaskDto()).ToList()
             };
         }
 
