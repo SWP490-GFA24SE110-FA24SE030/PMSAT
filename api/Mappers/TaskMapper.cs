@@ -14,7 +14,13 @@ namespace api.Mappers
             return new TaskDto
             {
                 Id = taskModel.Id,
-                Description = taskModel.Description,                
+                Title = taskModel.Title,
+                Description = taskModel.Description,
+                Priority = taskModel.Priority,
+                Created = taskModel.Created,
+                Updated = taskModel.Updated,
+                Status = taskModel.Status,
+                Tags = taskModel.Tags.Select(t => t.ToTagDto()).ToList(),
             };
         }
 
