@@ -15,7 +15,9 @@ namespace api.Mappers
             {
                 Id = userModel.Id,
                 Name = userModel.Name,
-                Email = userModel.Email
+                Email = userModel.Email,
+                TaskPReporters = userModel.TaskPReporters,
+                TaskPAssignees = userModel.TaskPAssignees,
             };
         }
 
