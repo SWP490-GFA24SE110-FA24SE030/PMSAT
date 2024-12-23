@@ -53,11 +53,11 @@ namespace api.Controllers
             var task = await _taskRepo.GetByIdAsync(taskId);
             if (task == null) 
             {
-                return BadRequest("Task is not exist!");
+                return BadRequest("Task does not exist!");
             }
             if (await _sprintRepo.GetByIdAsync(sprintId) == null) 
             {
-                return BadRequest("Task is not exist!");
+                return BadRequest("Task does not exist!");
             }
             if (task.SprintId == sprintId)
             {
@@ -65,6 +65,17 @@ namespace api.Controllers
             }
             await _sprintRepo.AddTaskToSprint(sprintId, taskId);
             return Ok("Add task successfuly!");
+        }
+
+        [HttpGet("{sprintId}")]
+        public async Task<IActionResult> DeleteSprintById([FromRoute] Guid sprintId)
+        {
+            if (await _sprintRepo.GetByIdAsync(sprintId) == null)
+            {
+                return BadRequest("Sprint does not exist");
+            }
+            await _sprintRepo.DeleteByIdAsync(sprintId);
+            return Ok("Delete Successfuly");
         }
 
 

@@ -29,7 +29,7 @@ namespace api.Repository
 
         public async Task<List<Sprint>> GetAllAsync()
         {
-            return await _context.Sprints.ToListAsync();
+            return await _context.Sprints.Include(t => t.TaskPs).ToListAsync();
         }
 
         public async Task<List<Sprint>> GetProjectSprint(Guid projectId)
@@ -63,6 +63,14 @@ namespace api.Repository
             task.SprintId = sprintId;
             await _context.SaveChangesAsync();
             return task;
+        }
+
+        public async Task<Sprint> DeleteByIdAsync(Guid id)
+        {
+            var sprint = await _context.Sprints.FirstOrDefaultAsync(s => s.Id == id);
+            _context.Sprints.Remove(sprint);
+            await _context.SaveChangesAsync();
+            return sprint;
         }
     }
 }
