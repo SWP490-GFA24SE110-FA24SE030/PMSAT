@@ -67,7 +67,7 @@ namespace api.Controllers
             return Ok("Add task successfuly!");
         }
 
-        [HttpGet("{sprintId}")]
+        [HttpDelete("{sprintId}/DeleteById")]
         public async Task<IActionResult> DeleteSprintById([FromRoute] Guid sprintId)
         {
             if (await _sprintRepo.GetByIdAsync(sprintId) == null)
