@@ -72,5 +72,17 @@ namespace api.Repository
             await _context.SaveChangesAsync();
             return sprint;
         }
+
+        public async Task<TaskP> RemoveTaskFromSprint(Guid taskId)
+        {
+            var task = await _context.TaskPs.FirstOrDefaultAsync(t => t.Id == taskId);
+            if (task == null) 
+            {
+                return null;
+            }
+            task.SprintId = null;
+            await _context.SaveChangesAsync();
+            return task;
+        }
     }
 }

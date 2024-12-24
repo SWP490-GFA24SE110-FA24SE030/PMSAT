@@ -47,7 +47,7 @@ namespace api.Controllers
             return Ok(sprintsBelongToProject.Select(s => s.ToSprintDto()));
         }
 
-        [HttpPut("sprintId = {sprinId}/taskId = {taskId}/AddTaskToSprint")]
+        [HttpPut("sprintId = {sprintId}/taskId = {taskId}/AddTaskToSprint")]
         public async Task<IActionResult> AddTaskToSprint([FromRoute] Guid sprintId, [FromRoute] Guid taskId)
         {
             var task = await _taskRepo.GetByIdAsync(taskId);
@@ -65,6 +65,23 @@ namespace api.Controllers
             }
             await _sprintRepo.AddTaskToSprint(sprintId, taskId);
             return Ok("Add task successfuly!");
+        }
+
+        [HttpPut("RemoveTask/taskId = {taskId}")]
+        public async Task<IActionResult> RemoveTaskFromSprint([FromRoute] Guid taskId)
+        {
+            var task = await _sprintRepo.RemoveTaskFromSprint(taskId);
+            if (task == null) 
+            {
+                return BadRequest("Task does not exist!");
+            }
+            
+            if (task.SprintId == Guid.Empty)
+            {
+                return BadRequest("This task is not assign to any sprint.");
+            }
+            
+            return Ok("Remove task successfuly!");
         }
 
         [HttpDelete("{sprintId}/DeleteById")]

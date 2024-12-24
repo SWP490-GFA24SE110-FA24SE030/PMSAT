@@ -50,6 +50,18 @@ namespace api.Controllers
 
         }
 
+        [HttpGet("getSprintIdFromTaskId/taskId={taskId}")]
+        public async Task<IActionResult> GetIdSprintFromTask([FromRoute] Guid taskId)
+        {
+            var task = await _taskRepo.GetByIdAsync(taskId);
+            if (task == null) 
+            {
+                return NotFound();
+            }
+            var sprintId = task.SprintId;
+            return Ok(sprintId);
+        }
+
         [HttpGet("getTasksFromProject/prjid={projectId}")]
         public async Task<IActionResult> GetTasksFromProject([FromRoute] Guid projectId)
         {
