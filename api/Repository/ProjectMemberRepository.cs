@@ -43,9 +43,15 @@ namespace api.Repository
             return true;
         }
 
-        public async Task<ProjectMember> DeleteByIdAsync(Guid id)
+        public async Task<ProjectMember> DeleteByIdAsync(Guid userId, Guid projectId)
         {
-            throw new NotImplementedException();
+            // Find the ProjectMember by UserId and ProjectId
+            var projectMember = await _context.ProjectMembers
+                .FirstOrDefaultAsync(pm => pm.UserId == userId && pm.ProjectId == projectId);
+
+            _context.ProjectMembers.Remove(projectMember);
+            await _context.SaveChangesAsync();
+            return projectMember;
         }
 
         public async Task<List<ProjectMember>> GetProjectMembersFromProjectAsync(Guid projectId)
