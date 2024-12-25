@@ -25,10 +25,20 @@ namespace api.Repository
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            var board = await _context.Boards.FindAsync(id);
+            var board = await _context.Boards
+                .Include(b => b.TaskPs)  
+                .FirstOrDefaultAsync(b => b.Id == id);
 
             if (board == null)
                 return false;
+
+            // Set BoardId to null for all related TaskPs
+            foreach (var task in board.TaskPs)
+            {
+                task.BoardId = null;
+                task.Status = null;
+                task.Updated = DateTime.Now;
+            }
 
             _context.Boards.Remove(board);
             await _context.SaveChangesAsync();
@@ -45,29 +55,27 @@ namespace api.Repository
 
         public async Task<List<BoardResponse>> GetByProjectIdAsync(Guid projectId)
         {
-            var boards = await _context.Boards
-                        .Where(b => b.ProjectId == projectId)
-                        .Include(b => b.TaskPs)
-                        .ToListAsync();
-
-            var boardDtos = boards.Select(b => new BoardResponse
-            {
-                Status = b.Status,
-                Orders = b.Orders,
-                TaskPs = b.TaskPs.Select(task => new TaskDto
+            return await _context.Boards
+                .Where(b => b.ProjectId == projectId)
+                .Include(b => b.TaskPs)
+                .Select(b => new BoardResponse
                 {
-                    Id = task.Id,
-                    Title = task.Title,
-                    Description = task.Description,
-                    Priority = task.Priority,
-                    Created = task.Created,
-                    Updated = task.Updated,
-                    Status = b.Status,
-                }).ToList()
-            }   ).ToList();
-
-            return boardDtos;
+                    Status = b.Status, // status of Board 
+                    TaskPs = b.TaskPs.Select(t => new TaskDto
+                    {
+                        Id = t.Id,
+                        Title = t.Title,
+                        Description = t.Description,
+                        Priority = t.Priority,
+                        Created = t.Created,
+                        Updated = t.Updated,
+                        Status = t.Status // status of Task
+                    }).ToList(),
+                    Orders = b.Orders
+                })
+                .ToListAsync();
         }
+
 
         public async Task<Board?> UpdateAsync(Guid id, UpdateBoardDto updateDto)
         {
