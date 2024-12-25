@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Dtos.AuthDto;
 using api.Dtos.User;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
+using api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,10 +19,13 @@ namespace api.Controllers
     {
         private readonly PmsatContext _context;
         private readonly IUserRepository _userRepo;
-        public UserController(PmsatContext context, IUserRepository userRepo)
+
+        private readonly IAuthService _authService;
+        public UserController(PmsatContext context, IUserRepository userRepo, IAuthService authService)
         {
             _userRepo = userRepo;
             _context = context;
+            _authService = authService;
         }
 
         [HttpGet("all")]
@@ -47,11 +52,17 @@ namespace api.Controllers
         }
 
         [HttpPost("new")]
-        public async Task<IActionResult> Create([FromBody] CreateUserRequestDto userDto)
+        public async Task<IActionResult> Create(RegisterRequest request)
         {
-            var userModel = userDto.ToUserFromCreateDTO();
-            await _userRepo.CreateAsync(userModel);
-            return CreatedAtAction(nameof(GetById), new { id = userModel.Id}, userModel.ToUserDto());
+            try
+            {
+                var response = await _authService.Register(request);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPut]

@@ -11,9 +11,12 @@ namespace api.Interfaces
     {
         public Task<Sprint> CreateAsync(Sprint sprintModel);
         public Task<Sprint> GetByIdAsync(Guid id);
+        public Task<Sprint> DeleteByIdAsync(Guid id);
         public Task<List<Sprint>> GetAllAsync();
 
         public Task<List<Sprint>> GetProjectSprint(Guid projectId);
+        public Task<TaskP> AddTaskToSprint(Guid sprintId, Guid taskId);
+        public Task<TaskP> RemoveTaskFromSprint(Guid taskId);
 
         public Task<Sprint> GetByNameAsync(String sprintName);
     }
