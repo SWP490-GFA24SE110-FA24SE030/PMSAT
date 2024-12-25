@@ -25,10 +25,20 @@ namespace api.Repository
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            var board = await _context.Boards.FindAsync(id);
+            var board = await _context.Boards
+                .Include(b => b.TaskPs)  
+                .FirstOrDefaultAsync(b => b.Id == id);
 
             if (board == null)
                 return false;
+
+            // Set BoardId to null for all related TaskPs
+            foreach (var task in board.TaskPs)
+            {
+                task.BoardId = null;
+                task.Status = null;
+                task.Updated = DateTime.Now;
+            }
 
             _context.Boards.Remove(board);
             await _context.SaveChangesAsync();
@@ -45,29 +55,27 @@ namespace api.Repository
 
         public async Task<List<BoardResponse>> GetByProjectIdAsync(Guid projectId)
         {
-            var boards = await _context.Boards
-                        .Where(b => b.ProjectId == projectId)
-                        .Include(b => b.TaskPs)
-                        .ToListAsync();
-
-            var boardDtos = boards.Select(b => new BoardResponse
-            {
-                Status = b.Status,
-                Orders = b.Orders,
-                TaskPs = b.TaskPs.Select(task => new TaskDto
+            return await _context.Boards
+                .Where(b => b.ProjectId == projectId)
+                .Include(b => b.TaskPs)
+                .Select(b => new BoardResponse
                 {
-                    Id = task.Id,
-                    Title = task.Title,
-                    Description = task.Description,
-                    Priority = task.Priority,
-                    Created = task.Created,
-                    Updated = task.Updated,
-                    Status = b.Status,
-                }).ToList()
-            }   ).ToList();
-
-            return boardDtos;
+                    Status = b.Status, // status of Board 
+                    TaskPs = b.TaskPs.Select(t => new TaskDto
+                    {
+                        Id = t.Id,
+                        Title = t.Title,
+                        Description = t.Description,
+                        Priority = t.Priority,
+                        Created = t.Created,
+                        Updated = t.Updated,
+                        Status = t.Status // status of Task
+                    }).ToList(),
+                    Orders = b.Orders
+                })
+                .ToListAsync();
         }
+
 
         public async Task<Board?> UpdateAsync(Guid id, UpdateBoardDto updateDto)
         {
@@ -86,6 +94,40 @@ namespace api.Repository
         public async Task<Board> GetByIdAsync(Guid id)
         {
             return await _context.Boards.FirstOrDefaultAsync(b => b.Id == id);
+        }
+
+        public async Task AddTaskToBoard(Guid taskId, Guid boardId)
+        {
+            var board = await _context.Boards
+                        .Include(b => b.TaskPs)
+                        .FirstOrDefaultAsync(b => b.Id == boardId);
+
+            if (board == null)
+            {
+                throw new Exception("Board not found");
+            }
+
+            // Check if the task with the given taskId already exists
+            var existingTask = await _context.TaskPs
+                               .FirstOrDefaultAsync(t => t.Id == taskId);
+
+            if (existingTask == null)
+            {
+                throw new Exception("Task not found.");
+            }
+
+            // Check if the task is already added to the board
+            if (board.TaskPs.Any(t => t.Id == taskId))
+            {
+                throw new Exception("This task is already added to the board.");
+            }
+
+            existingTask.Updated = DateTime.Now;
+            existingTask.Status = board.Status; // get status of Board insert into status of Task
+            existingTask.BoardId = boardId;
+
+            board.TaskPs.Add(existingTask);
+            await _context.SaveChangesAsync();
         }
     }
 }

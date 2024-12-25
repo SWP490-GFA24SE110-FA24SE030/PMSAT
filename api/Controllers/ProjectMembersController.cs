@@ -68,10 +68,10 @@ namespace api.Controllers
         }
 
         [HttpDelete]
-        [Route("delete/prjmemberid={id}")]
-        public async Task<IActionResult> DeleteByIdAsync([FromRoute] Guid id)
+        [Route("uid/{userId}/from/prjid/{projectId}/DeleteMemberFromProject")]
+        public async Task<IActionResult> DeleteByIdAsync([FromRoute] Guid userId, [FromRoute] Guid projectId)
         {
-            var projectMemberModel = await _projectMemberRepository.DeleteByIdAsync(id);
+            var projectMemberModel = await _projectMemberRepository.DeleteByIdAsync(userId, projectId);
 
             return Ok(new { Message = "Project Member(s) deleted successfully." });
         }

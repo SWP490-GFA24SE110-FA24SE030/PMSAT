@@ -10,6 +10,6 @@ namespace api.Interfaces
         Task<User> GetUserByEmailAsync(string email);
         Task<bool> IsUserAlreadyMemberAsync(Guid projectId, Guid userId);
         Task<List<ProjectMember>> GetProjectMembersFromProjectAsync(Guid projectId);
-        Task<ProjectMember> DeleteByIdAsync(Guid id);
+        Task<ProjectMember> DeleteByIdAsync(Guid userId, Guid projectId);
     }
 }
