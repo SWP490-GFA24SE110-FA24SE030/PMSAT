@@ -22,8 +22,8 @@ namespace api.Controllers
         public async Task<IActionResult> GetBoardsByProject([FromRoute] Guid projectId)
         {
             var boards = await _boardRepo.GetByProjectIdAsync(projectId);
-            var boardDto = boards.Select(b => b.ToBoardDto());
-            return Ok(boardDto);
+            
+            return Ok(boards);
         }
 
         [HttpPost("prjid={projectId}/new")]
