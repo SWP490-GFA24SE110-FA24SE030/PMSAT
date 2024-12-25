@@ -12,6 +12,7 @@ CREATE TABLE Users (
     Name NVARCHAR(255),
     Email NVARCHAR(255),
     Password NVARCHAR(255),
+	Avatar NVARCHAR(500),
     Role NVARCHAR(50), -- user,admin
     Status NVARCHAR(50)
 );

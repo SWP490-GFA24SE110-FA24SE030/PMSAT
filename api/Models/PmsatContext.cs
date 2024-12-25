@@ -43,13 +43,13 @@ public partial class PmsatContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-QDI89RC;Database=PMSAT;User ID=sa;Password= 123456;Trusted_Connection=False;Encrypt=False;");
+        => optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=PMSAT;Uid=sa;Pwd=1234;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AnalysisResult>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Analysis__3214EC07C480C3D3");
+            entity.HasKey(e => e.Id).HasName("PK__Analysis__3214EC074C9B0AD5");
 
             entity.ToTable("AnalysisResult");
 
@@ -69,7 +69,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<Board>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Board__3214EC07102FB867");
+            entity.HasKey(e => e.Id).HasName("PK__Board__3214EC07BADB2921");
 
             entity.ToTable("Board");
 
@@ -84,7 +84,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<Commit>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Commits__3214EC079B502F20");
+            entity.HasKey(e => e.Id).HasName("PK__Commits__3214EC07F5512712");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
@@ -98,7 +98,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<Issue>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Issue__3214EC073F2C1FF2");
+            entity.HasKey(e => e.Id).HasName("PK__Issue__3214EC07FC6F5BDB");
 
             entity.ToTable("Issue");
 
@@ -114,7 +114,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<Project>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Project__3214EC07D7F16EF4");
+            entity.HasKey(e => e.Id).HasName("PK__Project__3214EC077B5FBE5A");
 
             entity.ToTable("Project");
 
@@ -124,7 +124,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<ProjectMember>(entity =>
         {
-            entity.HasKey(e => new { e.UserId, e.ProjectId }).HasName("PK__ProjectM__00E967A3DA5364C0");
+            entity.HasKey(e => new { e.UserId, e.ProjectId }).HasName("PK__ProjectM__00E967A3F0A6B6DE");
 
             entity.ToTable("ProjectMember");
 
@@ -141,7 +141,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<PullRequest>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PullRequ__3214EC075A2DB0D2");
+            entity.HasKey(e => e.Id).HasName("PK__PullRequ__3214EC07996CFEA1");
 
             entity.ToTable("PullRequest");
 
@@ -161,7 +161,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<Repository>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Reposito__3214EC076C5C9A9E");
+            entity.HasKey(e => e.Id).HasName("PK__Reposito__3214EC0714E02587");
 
             entity.ToTable("Repository");
 
@@ -178,7 +178,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<Sprint>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Sprint__3214EC0719D658EA");
+            entity.HasKey(e => e.Id).HasName("PK__Sprint__3214EC07C4327D22");
 
             entity.ToTable("Sprint");
 
@@ -195,7 +195,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<Tag>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tag__3214EC078ECEEA94");
+            entity.HasKey(e => e.Id).HasName("PK__Tag__3214EC07D1A8EEAD");
 
             entity.ToTable("Tag");
 
@@ -205,7 +205,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<TaskP>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__TaskP__3214EC07770FE707");
+            entity.HasKey(e => e.Id).HasName("PK__TaskP__3214EC07409B7BA7");
 
             entity.ToTable("TaskP");
 
@@ -250,16 +250,17 @@ public partial class PmsatContext : DbContext
                         .HasConstraintName("FK__TaskTag__TaskId__59063A47"),
                     j =>
                     {
-                        j.HasKey("TaskId", "TagId").HasName("PK__TaskTag__AA3E862B1FDA87FD");
+                        j.HasKey("TaskId", "TagId").HasName("PK__TaskTag__AA3E862B42F113B2");
                         j.ToTable("TaskTag");
                     });
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC079CE2CD02");
+            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC075E654ADE");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Avatar).HasMaxLength(500);
             entity.Property(e => e.Email).HasMaxLength(255);
             entity.Property(e => e.Name).HasMaxLength(255);
             entity.Property(e => e.Password).HasMaxLength(255);
@@ -269,7 +270,7 @@ public partial class PmsatContext : DbContext
 
         modelBuilder.Entity<Workflow>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Workflow__3214EC073E1814F5");
+            entity.HasKey(e => e.Id).HasName("PK__Workflow__3214EC07B1336548");
 
             entity.ToTable("Workflow");
 
