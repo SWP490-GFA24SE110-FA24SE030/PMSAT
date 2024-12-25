@@ -67,9 +67,20 @@ namespace api.Repository
 
         public async Task<Sprint> DeleteByIdAsync(Guid id)
         {
-            var sprint = await _context.Sprints.FirstOrDefaultAsync(s => s.Id == id);
-            _context.Sprints.Remove(sprint);
+            var tasks = _context.TaskPs.Where(t => t.SprintId == id).ToList();
+            foreach (var task in tasks)
+            {
+                task.SprintId = null;  // Disassociate the task from the sprint
+            }
             await _context.SaveChangesAsync();
+
+            var sprint = await _context.Sprints.FindAsync(id);
+            if (sprint != null)
+            {
+                _context.Sprints.Remove(sprint);
+                await _context.SaveChangesAsync();
+            }
+            
             return sprint;
         }
 
