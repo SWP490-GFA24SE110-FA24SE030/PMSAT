@@ -6,7 +6,7 @@ namespace api.Interfaces
     public interface IBoardRepository
     {
         Task<Board> CreateAsync(Board board);
-        Task<List<Board>> GetByProjectIdAsync(Guid projectId);
+        Task<List<BoardResponse>> GetByProjectIdAsync(Guid projectId);
         Task<Board> GetByIdAsync(Guid id);
         Task<string> GetFirstBoardStatusByProjectIdAsync(Guid projectId);
         Task<Board?> UpdateAsync(Guid id, UpdateBoardDto updateDto);

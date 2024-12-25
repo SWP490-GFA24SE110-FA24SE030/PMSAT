@@ -1,7 +1,9 @@
 ﻿using api.Dtos.Board;
+using api.Dtos.Task;
 using api.Interfaces;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace api.Repository
 {
@@ -41,11 +43,30 @@ namespace api.Repository
             return status;
         }
 
-        public async Task<List<Board>> GetByProjectIdAsync(Guid projectId)
+        public async Task<List<BoardResponse>> GetByProjectIdAsync(Guid projectId)
         {
-            return await _context.Boards
-                   .Where(b => b.ProjectId == projectId)
-                   .ToListAsync();
+            var boards = await _context.Boards
+                        .Where(b => b.ProjectId == projectId)
+                        .Include(b => b.TaskPs)
+                        .ToListAsync();
+
+            var boardDtos = boards.Select(b => new BoardResponse
+            {
+                Status = b.Status,
+                Orders = b.Orders,
+                TaskPs = b.TaskPs.Select(task => new TaskDto
+                {
+                    Id = task.Id,
+                    Title = task.Title,
+                    Description = task.Description,
+                    Priority = task.Priority,
+                    Created = task.Created,
+                    Updated = task.Updated,
+                    Status = b.Status,
+                }).ToList()
+            }   ).ToList();
+
+            return boardDtos;
         }
 
         public async Task<Board?> UpdateAsync(Guid id, UpdateBoardDto updateDto)
