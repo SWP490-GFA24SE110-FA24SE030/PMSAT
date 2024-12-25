@@ -3,6 +3,7 @@ using api.Interfaces;
 using api.Mappers;
 using api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
@@ -28,11 +29,16 @@ namespace api.Controllers
         [HttpPost("prjid={projectId}/new")]
         public async Task<IActionResult> CreateBoard([FromRoute] Guid projectId, [FromBody] CreateBoardDto boardDto)
         {
+            var boards = await _boardRepo.GetByProjectIdAsync(projectId);
+            var maxValue = boards.Max(b => b.Orders);
+            maxValue++;
+
             var board = new Board
             {
                 Id = Guid.NewGuid(),
                 Status = boardDto.Status,
-                ProjectId = projectId
+                ProjectId = projectId,
+                Orders = maxValue,
             };
 
             var createdBoard = await _boardRepo.CreateAsync(board);
