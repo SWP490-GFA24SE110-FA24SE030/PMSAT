@@ -95,5 +95,39 @@ namespace api.Repository
         {
             return await _context.Boards.FirstOrDefaultAsync(b => b.Id == id);
         }
+
+        public async Task AddTaskToBoard(Guid taskId, Guid boardId)
+        {
+            var board = await _context.Boards
+                        .Include(b => b.TaskPs)
+                        .FirstOrDefaultAsync(b => b.Id == boardId);
+
+            if (board == null)
+            {
+                throw new Exception("Board not found");
+            }
+
+            // Check if the task with the given taskId already exists
+            var existingTask = await _context.TaskPs
+                               .FirstOrDefaultAsync(t => t.Id == taskId);
+
+            if (existingTask == null)
+            {
+                throw new Exception("Task not found.");
+            }
+
+            // Check if the task is already added to the board
+            if (board.TaskPs.Any(t => t.Id == taskId))
+            {
+                throw new Exception("This task is already added to the board.");
+            }
+
+            existingTask.Updated = DateTime.Now;
+            existingTask.Status = board.Status; // get status of Board insert into status of Task
+            existingTask.BoardId = boardId;
+
+            board.TaskPs.Add(existingTask);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -45,6 +45,20 @@ namespace api.Controllers
             return Ok(new { Message = "Board(s) created successfully." });
         }
 
+        [HttpPut("board/{boardId}/task/{taskId}/AddTaskToBoard")]
+        public async Task<IActionResult> AddTaskToBoardAsync(Guid boardId, Guid taskId)
+        {
+            try
+            {
+                await _boardRepo.AddTaskToBoard(taskId, boardId);
+                return Ok("Task added to this Board successfully.");
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBoard([FromRoute] Guid id, [FromBody] UpdateBoardDto updateDto)
         {
