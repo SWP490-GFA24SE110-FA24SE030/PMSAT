@@ -51,5 +51,12 @@ namespace api.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        [HttpGet("roles")]
+        public async Task<ActionResult<List<string>>> GetRoles()
+        {
+            var roles = await _authService.GetRoles();
+            return Ok(roles);
+        }
     }
 }

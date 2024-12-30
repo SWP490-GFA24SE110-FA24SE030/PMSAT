@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using api.Dtos.Project;
 using api.Interfaces;
 using api.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -94,9 +96,11 @@ namespace api.Controllers
             }
         }
 
-        [HttpPost("uid={userId}/new")]
-        public async Task<IActionResult> CreateProject([FromRoute] Guid userId, [FromBody] CreateProjectRequestDto createProjectDto)
+        [Authorize]
+        [HttpPost("uid=new")]
+        public async Task<IActionResult> CreateProject( [FromBody] CreateProjectRequestDto createProjectDto)
         {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             try
             {
                 var newProjectId = await _projectRepo.CreateProjectAsync(userId, createProjectDto);

@@ -11,5 +11,6 @@ namespace api.Services
     {
         Task<LoginResponse> Login(LoginRequest request);
         Task<RegisterResponse> Register(RegisterRequest request);
+        Task<List<string>> GetRoles();
     }
 }

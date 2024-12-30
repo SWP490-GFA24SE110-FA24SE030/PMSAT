@@ -48,6 +48,13 @@ namespace api.Repository
             return await _context.Users.FindAsync(id);
         }
 
+        public async Task SetAvatar(Guid userId, string filePath)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            user.Avatar = filePath;
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<User?> UpdateAsync(Guid id, UpdateUserRequestDto userDto)
         {
             var existingUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
@@ -67,5 +74,7 @@ namespace api.Repository
 
             return existingUser;
         }
+
+        
     }
 }
