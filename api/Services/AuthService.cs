@@ -24,7 +24,12 @@ namespace api.Services
         _configuration = configuration;
     }
 
-    public async Task<LoginResponse> Login(LoginRequest request)
+        public async Task<List<string>> GetRoles()
+        {
+            return await _context.Users.Select(u => u.Role).ToListAsync();
+        }
+
+        public async Task<LoginResponse> Login(LoginRequest request)
     {
         var user = await _context.Users
             .FirstOrDefaultAsync(u => u.Email == request.Email);
