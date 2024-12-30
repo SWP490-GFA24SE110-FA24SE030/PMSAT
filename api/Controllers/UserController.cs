@@ -24,6 +24,8 @@ namespace api.Controllers
         private readonly IUserRepository _userRepo;
 
         private readonly IAuthService _authService;
+        private readonly string _profilePicturesPath = @"C:\Users\ASUS\Desktop\UserAvatar";
+
         public UserController(PmsatContext context, IUserRepository userRepo, IAuthService authService)
         {
             _userRepo = userRepo;
@@ -123,6 +125,37 @@ namespace api.Controllers
             }
 
             return NoContent();
+        }
+
+        [Authorize]
+        [HttpPost("avatar")]
+        public async Task<IActionResult> UploadProfilePicture(IFormFile profilePicture)
+        {
+            if (profilePicture == null || profilePicture.Length == 0)
+            {
+                return BadRequest("No file was uploaded.");
+            }
+
+            // Ensure the directory exists
+            if (!Directory.Exists(_profilePicturesPath))
+            {
+                Directory.CreateDirectory(_profilePicturesPath);
+            }
+
+            // Generate a unique filename
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(profilePicture.FileName);
+            var filePath = Path.Combine(_profilePicturesPath, fileName);
+
+            // Save the file to the server
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await profilePicture.CopyToAsync(stream);
+            }
+
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            await _userRepo.SetAvatar(userId, $"/profile_pictures/{fileName}");
+
+            return Ok(new { FilePath = $"/profile_pictures/{fileName}" });
         }
 
 

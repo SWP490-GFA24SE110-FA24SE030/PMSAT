@@ -14,5 +14,6 @@ namespace api.Interfaces
         Task<User> CreateAsync(User userModel);
         Task<User?> UpdateAsync(Guid id, UpdateUserRequestDto userDto);
         Task<User> DeleteAsync(Guid id);
+        Task SetAvatar(Guid userId, string filePath);
     }
 }
