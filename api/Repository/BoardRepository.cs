@@ -23,6 +23,11 @@ namespace api.Repository
             return board;
         }
 
+        public async Task<List<Board>> GetAllAsync()
+        {
+            return await _context.Boards.ToListAsync();
+        }
+
         public async Task<bool> DeleteAsync(Guid id)
         {
             var board = await _context.Boards

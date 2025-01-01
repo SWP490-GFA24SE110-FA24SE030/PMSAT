@@ -17,11 +17,13 @@ namespace api.Controllers
         private readonly ISprintRepository _sprintRepo;
         private readonly IProjectRepository _projectRepo;
         private readonly ITaskRepository _taskRepo;
-        public SprintController(ISprintRepository sprintRepo, IProjectRepository projectRepo, ITaskRepository taskRepo)
+        private readonly IBoardRepository _boardRepo;
+        public SprintController(ISprintRepository sprintRepo, IProjectRepository projectRepo, ITaskRepository taskRepo, IBoardRepository boardRepo)
         {
             _sprintRepo = sprintRepo;
             _projectRepo = projectRepo;
             _taskRepo = taskRepo;
+            _boardRepo = boardRepo;
         }
 
         [HttpGet]
@@ -47,7 +49,7 @@ namespace api.Controllers
             return Ok(sprintsBelongToProject.Select(s => s.ToSprintDto()));
         }
 
-        [HttpPut("sprintId = {sprintId}/taskId = {taskId}/AddTaskToSprint")]
+        [HttpPut("sprintId={sprintId}/taskId = {taskId}/AddTaskToSprint")]
         public async Task<IActionResult> AddTaskToSprint([FromRoute] Guid sprintId, [FromRoute] Guid taskId)
         {
             var task = await _taskRepo.GetByIdAsync(taskId);
@@ -67,7 +69,7 @@ namespace api.Controllers
             return Ok("Add task successfuly!");
         }
 
-        [HttpPut("RemoveTask/taskId = {taskId}")]
+        [HttpPut("RemoveTask/taskId={taskId}")]
         public async Task<IActionResult> RemoveTaskFromSprint([FromRoute] Guid taskId)
         {
             var task = await _sprintRepo.RemoveTaskFromSprint(taskId);
@@ -109,6 +111,36 @@ namespace api.Controllers
             await _sprintRepo.CreateAsync(sprintModel);
 
             return Ok(sprintModel);
+        }
+
+        [HttpPut("StartSprint/{sprintId}/{startDate}/{endDate}")]
+        public async Task<IActionResult> StartSprint([FromRoute] Guid sprintId, [FromRoute] DateTime startDate, [FromRoute] DateTime endDate)
+        {
+            
+            
+            var tasks = await _taskRepo.GetTasksFromSprintAsync(sprintId);
+            var boards = await _boardRepo.GetAllAsync();
+            foreach (var task in tasks) {
+                foreach (var board in boards)
+                {
+                    if (board.Status == task.Status && board.ProjectId == task.ProjectId)
+                    {
+                        if (!board.TaskPs.Contains(task))
+                        {
+                            board.TaskPs.Add(task);
+                            Console.WriteLine($"Task '{task.Title}' added to Board with Status '{board.Status}'.");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Task '{task.Title}' is already in the Board.");
+                        }
+                    }
+                }
+            }
+
+            await _sprintRepo.UpdateSprintDate(sprintId, startDate, endDate);
+
+            return Ok("Started!");
         }
     }
 }

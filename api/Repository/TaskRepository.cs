@@ -123,6 +123,11 @@ namespace api.Repository
             return tasks;
         }
 
+        public async Task<List<TaskP>> GetTasksFromSprintAsync(Guid sprintId)
+        {
+            return await _context.TaskPs.Where(t => t.SprintId == sprintId).ToListAsync();
+        }
+
         public async Task UpdateAsync(TaskP task)
         {
             _context.TaskPs.Update(task);
