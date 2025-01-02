@@ -11,7 +11,7 @@ namespace api.Interfaces
         Task<List<BoardResponse>> GetByProjectIdAsync(Guid projectId);
         Task<Board> GetByIdAsync(Guid id);
         Task<string> GetFirstBoardStatusByProjectIdAsync(Guid projectId);
-        Task<Board?> UpdateAsync(Guid id, UpdateBoardDto updateDto);
+        Task<Board?> UpdateAsync(Guid id, string status);
         Task<bool> DeleteAsync(Guid id);
         
     }
