@@ -116,8 +116,6 @@ namespace api.Controllers
         [HttpPut("StartSprint/{sprintId}/{startDate}/{endDate}")]
         public async Task<IActionResult> StartSprint([FromRoute] Guid sprintId, [FromRoute] DateTime startDate, [FromRoute] DateTime endDate)
         {
-            
-            
             var tasks = await _taskRepo.GetTasksFromSprintAsync(sprintId);
             var boards = await _boardRepo.GetAllAsync();
             foreach (var task in tasks) {
@@ -127,7 +125,7 @@ namespace api.Controllers
                     {
                         if (!board.TaskPs.Contains(task))
                         {
-                            board.TaskPs.Add(task);
+                            board.TaskPs.Add(task); 
                             Console.WriteLine($"Task '{task.Title}' added to Board with Status '{board.Status}'.");
                         }
                         else
@@ -142,5 +140,35 @@ namespace api.Controllers
 
             return Ok("Started!");
         }
+
+        [HttpPut("EndSprint/{sprintId}")]
+        public async Task<IActionResult> CompleteSprint([FromRoute] Guid sprintId)
+        {
+            var tasks = await _taskRepo.GetTasksFromSprintAsync(sprintId);
+            var boards = await _boardRepo.GetAllAsync();
+            foreach (var task in tasks) {
+                foreach (var board in boards)
+                {
+                    if (board.ProjectId == task.ProjectId)
+                    {
+                        if (board.TaskPs.Contains(task))
+                        {
+                            board.TaskPs.Remove(task); 
+                            Console.WriteLine($"Task '{task.Title}' removed from Board with Status '{board.Status}'.");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Task '{task.Title}' is not in the Board.");
+                        }
+                    }
+                }
+            }
+
+            await _sprintRepo.RemoveSprintDate(sprintId);
+
+            return Ok("Completed!");
+        }
+
+
     }
 }

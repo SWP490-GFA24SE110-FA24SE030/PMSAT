@@ -103,5 +103,13 @@ namespace api.Repository
             task.EndDate = endDate;
             await _context.SaveChangesAsync();
         }
+
+        public async Task RemoveSprintDate(Guid sprintId)
+        {
+            var task = await _context.Sprints.FirstOrDefaultAsync(s => s.Id == sprintId);
+            task.StartDate = null;
+            task.EndDate = null;
+            await _context.SaveChangesAsync();
+        }
     }
 }
