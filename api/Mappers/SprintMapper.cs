@@ -28,10 +28,11 @@ namespace api.Mappers
             {
                 Id = Guid.NewGuid(),
                 Name = request.Name,
-                StartDate = request.StartDate,
-                EndDate = request.EndDate,
+                
                 ProjectId = projectId,
             };
         }
+
+        
     }
 }

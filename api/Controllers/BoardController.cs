@@ -12,10 +12,12 @@ namespace api.Controllers
     public class BoardController : ControllerBase
     {
         private readonly IBoardRepository _boardRepo;
+        private readonly ITaskRepository _taskRepo;
 
-        public BoardController(IBoardRepository boardRepo)
+        public BoardController(IBoardRepository boardRepo, ITaskRepository taskRepo)
         {
             _boardRepo = boardRepo;
+            _taskRepo = taskRepo;
         }
 
         [HttpGet("prjid={projectId}/all")]
@@ -59,11 +61,21 @@ namespace api.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBoard([FromRoute] Guid id, [FromBody] UpdateBoardDto updateDto)
+        [HttpPut("{id}/{status}")]
+        public async Task<IActionResult> UpdateBoard([FromRoute] Guid id, [FromRoute] string status)
         {
-            var updatedBoard = await _boardRepo.UpdateAsync(id, updateDto);
+            var board = await _boardRepo.GetByIdAsync(id);
+            var tasks = await _taskRepo.GetAllAsync();
 
+            foreach (var task in tasks)
+            {
+                if (task.Status == board.Status && task.ProjectId == board.ProjectId)
+                {
+                    await _taskRepo.UpdateTaskStatusAsync(task.Id, status);
+                }
+            }
+            var updatedBoard = await _boardRepo.UpdateAsync(id, status);
+            
             if (updatedBoard == null)
                 return NotFound();
 

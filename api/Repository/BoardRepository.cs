@@ -23,6 +23,11 @@ namespace api.Repository
             return board;
         }
 
+        public async Task<List<Board>> GetAllAsync()
+        {
+            return await _context.Boards.ToListAsync();
+        }
+
         public async Task<bool> DeleteAsync(Guid id)
         {
             var board = await _context.Boards
@@ -77,15 +82,14 @@ namespace api.Repository
         }
 
 
-        public async Task<Board?> UpdateAsync(Guid id, UpdateBoardDto updateDto)
+        public async Task<Board?> UpdateAsync(Guid id, string status)
         {
             var board = await _context.Boards.FindAsync(id);
 
             if (board == null)
                 return null;
 
-            if (!string.IsNullOrWhiteSpace(updateDto.Status))
-                board.Status = updateDto.Status;
+            board.Status = status;
 
             await _context.SaveChangesAsync();
             return board;

@@ -17,7 +17,9 @@ namespace api.Interfaces
         public Task<List<Sprint>> GetProjectSprint(Guid projectId);
         public Task<TaskP> AddTaskToSprint(Guid sprintId, Guid taskId);
         public Task<TaskP> RemoveTaskFromSprint(Guid taskId);
+        Task RemoveSprintDate(Guid sprintId);
 
-        public Task<Sprint> GetByNameAsync(String sprintName);
+        public Task<Sprint> GetByNameAsync(string sprintName);
+        Task UpdateSprintDate(Guid sprintId, DateTime startDate, DateTime endDate);
     }
 }
