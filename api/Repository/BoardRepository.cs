@@ -65,6 +65,7 @@ namespace api.Repository
                 .Include(b => b.TaskPs)
                 .Select(b => new BoardResponse
                 {
+                    Id = b.Id,
                     Status = b.Status, // status of Board 
                     TaskPs = b.TaskPs.Select(t => new TaskDto
                     {
