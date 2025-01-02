@@ -9,6 +9,7 @@ namespace api.Mappers
         {
             return new BoardResponse
             {
+                Id = boardModel.Id,
                 Status = boardModel.Status,
                 TaskPs = boardModel.TaskPs.Select(t => t.ToTaskDto()).ToList(),
             };
