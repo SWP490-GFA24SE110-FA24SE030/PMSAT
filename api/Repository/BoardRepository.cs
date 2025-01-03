@@ -62,6 +62,7 @@ namespace api.Repository
         {
             return await _context.Boards
                 .Where(b => b.ProjectId == projectId)
+                .OrderBy(b => b.Orders)
                 .Include(b => b.TaskPs)
                 .Select(b => new BoardResponse
                 {
