@@ -186,10 +186,10 @@ namespace api.Controllers
             return Ok(new { Message = "sucess" });
         }
 
-        [HttpPost("LeaderID={leaderId}/assign/TaskID={taskId}")]
-        public async Task<IActionResult> AssignTaskToMember([FromRoute] Guid leaderId, [FromRoute] Guid taskId, [FromBody] AssignTaskToMemberDto taskAssignment)
+        [HttpPost("UserID={userId}/assign/TaskID={taskId}")]
+        public async Task<IActionResult> AssignTaskToMember([FromRoute] Guid userId, [FromRoute] Guid taskId, [FromBody] AssignTaskToMemberDto taskAssignment)
         {
-            var resultMessage = await _taskRepo.AssignTaskToMemberAsync(leaderId, taskId, taskAssignment.Email);
+            var resultMessage = await _taskRepo.AssignTaskToMemberAsync(userId, taskId, taskAssignment.Email);
 
             if (resultMessage == "Success")
             {
