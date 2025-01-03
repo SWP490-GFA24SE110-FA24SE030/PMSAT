@@ -60,6 +60,7 @@ namespace api.Repository
             // Assign the task to the Project Member
             task.AssigneeId = projectMember.UserId;
             task.ReporterId = leader.UserId;
+            task.Updated = DateTime.Now;
             
             await _context.SaveChangesAsync();
             return "Success"; 

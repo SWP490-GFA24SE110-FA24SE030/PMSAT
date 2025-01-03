@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using api.Dtos.Task;
 using api.Interfaces;
@@ -186,9 +187,10 @@ namespace api.Controllers
             return Ok(new { Message = "sucess" });
         }
 
-        [HttpPost("UserID={userId}/assign/TaskID={taskId}")]
-        public async Task<IActionResult> AssignTaskToMember([FromRoute] Guid userId, [FromRoute] Guid taskId, [FromBody] AssignTaskToMemberDto taskAssignment)
+        [HttpPost("assign/TaskID={taskId}")]
+        public async Task<IActionResult> AssignTaskToMember([FromRoute] Guid taskId, [FromBody] AssignTaskToMemberDto taskAssignment)
         {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var resultMessage = await _taskRepo.AssignTaskToMemberAsync(userId, taskId, taskAssignment.Email);
 
             if (resultMessage == "Success")
