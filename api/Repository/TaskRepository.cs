@@ -22,28 +22,28 @@ namespace api.Repository
             _context = context;
         }
 
-        public async Task<string> AssignTaskToMemberAsync(Guid leaderId, Guid taskId, string email)
+        public async Task<string> AssignTaskToMemberAsync(Guid userId, Guid taskId, string email)
         {
             // Validate if the current user is a Project Leader
-            //var leader = await _context.ProjectMembers.FirstOrDefaultAsync(pm =>
-            //pm.Id == leaderId && pm.Role == "Leader");
+            var leader = await _context.ProjectMembers.FirstOrDefaultAsync(pm =>
+            pm.UserId == userId && pm.Role == "Leader");
 
-            //if (leader == null)
-            //{
-            //    return "You are not authorized to assign tasks.";
-            //}
+            if (leader == null)
+            {
+                return "You are not authorized to assign tasks.";
+            }
 
             // Validate that the Task exists and belongs to the same Project as the leader
             var task = await _context.TaskPs.FirstOrDefaultAsync(t => t.Id == taskId);
 
-            //if (task == null)
-            //{
-            //    return "Task not found.";
-            //}
-            //if (task.ProjectId != leader.ProjectId)
-            //{
-            //    return "You can only assign tasks within projects you manage.";
-            //}
+            if (task == null)
+            {
+                return "Task not found.";
+            }
+            if (task.ProjectId != leader.ProjectId)
+            {
+                return "You can only assign tasks within projects you manage.";
+            }
 
             // Validate if the project member exists using their email
             var projectMember = await _context.ProjectMembers
@@ -58,7 +58,10 @@ namespace api.Repository
             }
 
             // Assign the task to the Project Member
-            //task.ProjectMemberId = projectMember.Id; // Update task with project member ID
+            task.AssigneeId = projectMember.UserId;
+            task.ReporterId = leader.UserId;
+            task.Updated = DateTime.Now;
+            
             await _context.SaveChangesAsync();
             return "Success"; 
         }

@@ -19,7 +19,7 @@ namespace api.Interfaces
         Task UpdateAsync(TaskP task);
         Task<string> UpdateTaskStatusAsync(Guid taskId, string status);
         Task<Board> ChangeBoard(Guid taskId, Guid boardId);
-        Task<string> AssignTaskToMemberAsync(Guid leaderId, Guid taskId, string email);
+        Task<string> AssignTaskToMemberAsync(Guid userId, Guid taskId, string email);
         Task<TaskP> DeleteByIdAsync(Guid id);
     }
 }

@@ -32,7 +32,7 @@ namespace api.Repository
             // Create a new ProjectMember entity
             var projectMember = new ProjectMember
             {
-                Role = projectMemberDto.Role,
+                Role = "Member",
                 UserId = user.Id, // Set the UserId from the found user
                 ProjectId = projectId
             };
