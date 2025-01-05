@@ -126,7 +126,7 @@ namespace api.Repository
             var projects = await _context.Projects
                 .Include(a => a.AnalysisResults)
                 .Include(b => b.Boards)
-                .ThenInclude(t => t.TaskPs)
+                .Include(t => t.TaskPs)
                 .Include(pm => pm.ProjectMembers)
                 .Include(s => s.Sprints)
                 .ToListAsync();

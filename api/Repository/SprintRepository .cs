@@ -45,11 +45,15 @@ namespace api.Repository
         public async Task<Sprint?> GetByIdAsync(Guid id)
         {
             if (id == Guid.Empty)
-            {
-                throw new ArgumentException("Invalid Id provided", nameof(id));
-            }
+                {
+                    throw new ArgumentException("Invalid Id provided", nameof(id));
+                }
 
-            return await _context.Sprints.FindAsync(id);
+            var sprint = await _context.Sprints
+                .Include(s => s.TaskPs)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+            return sprint;
         }
 
         public async Task<Sprint> GetByNameAsync(string sprintName)
