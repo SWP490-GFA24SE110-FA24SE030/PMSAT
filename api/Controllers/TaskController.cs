@@ -160,6 +160,14 @@ namespace api.Controllers
             {
                 return NotFound();
             }
+            var boards = await _boardRepo.GetAllAsync();
+            foreach (var board in boards)
+            {
+                if (board.ProjectId == task.ProjectId && board.Status == status && task.BoardId != null)
+                {
+                    board.TaskPs.Add(task);
+                } else board.TaskPs.Remove(task);
+            }
             var statusModel =  await _taskRepo.UpdateTaskStatusAsync(taskId, status);
             return Ok(statusModel);
         }
