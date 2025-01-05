@@ -16,7 +16,7 @@ namespace api.Controllers
             _projectMemberRepository = projectMemberRepository;
         }
 
-        [HttpPost("prjid={projectId}/add")]
+        [HttpPost("projectId={projectId}/add")]
         public async Task<IActionResult> AddProjectMember([FromRoute] Guid projectId, [FromBody] AddProjectMemberRequest projectMemberDto)
         {
             var success = await _projectMemberRepository.AddProjectMemberAsync(projectId, projectMemberDto);
@@ -45,7 +45,7 @@ namespace api.Controllers
             return Ok(new { message = "Project member added successfully." });
         }
 
-        [HttpGet("prjid={projectId}/all")]
+        [HttpGet("projectId={projectId}/all")]
         public async Task<IActionResult> GetProjectMembersFromProject([FromRoute] Guid projectId)
         {
             try
@@ -68,7 +68,7 @@ namespace api.Controllers
         }
 
         [HttpDelete]
-        [Route("uid/{userId}/from/prjid/{projectId}/DeleteMemberFromProject")]
+        [Route("userId/{userId}/from/projectId/{projectId}/DeleteMemberFromProject")]
         public async Task<IActionResult> DeleteByIdAsync([FromRoute] Guid userId, [FromRoute] Guid projectId)
         {
             var projectMemberModel = await _projectMemberRepository.DeleteByIdAsync(userId, projectId);

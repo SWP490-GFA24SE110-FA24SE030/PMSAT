@@ -63,7 +63,7 @@ namespace api.Controllers
             return Ok(sprintId);
         }
 
-        [HttpGet("getTasksFromProject/prjid={projectId}")]
+        [HttpGet("getTasksFromProject/projectId={projectId}")]
         public async Task<IActionResult> GetTasksFromProject([FromRoute] Guid projectId)
         {
             try
@@ -152,7 +152,7 @@ namespace api.Controllers
         //    return Ok(new { Message = "Task updated successfully."});
         //}
 
-        [HttpPut("tsk={taskId}/updateStatus")]
+        [HttpPut("taskId={taskId}/updateStatus")]
         public async Task<IActionResult> UpdateTaskStatus([FromRoute] Guid taskId, [FromBody] string status)
         {
             var task = await _taskRepo.GetByIdAsync(taskId);
@@ -164,7 +164,7 @@ namespace api.Controllers
             return Ok(statusModel);
         }
 
-        [HttpPut("tsk={taskId}/changeBoard/brd={boardId}")]
+        [HttpPut("taskId={taskId}/changeBoard/board={boardId}")]
         public async Task<IActionResult> ChangeBoard([FromRoute] Guid taskId, [FromRoute] Guid boardId)
         {
             // Check if the task exists
@@ -187,7 +187,7 @@ namespace api.Controllers
             return Ok(new { Message = "sucess" });
         }
 
-        [HttpPost("assign/TaskID={taskId}")]
+        [HttpPost("assign/taskId={taskId}")]
         public async Task<IActionResult> AssignTaskToMember([FromRoute] Guid taskId, [FromBody] AssignTaskToMemberDto taskAssignment)
         {
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -201,7 +201,7 @@ namespace api.Controllers
         }
 
         [HttpDelete]
-        [Route("delete/tskid={id}")]
+        [Route("delete/taskid={id}")]
         public async Task<IActionResult> DeleteByIdAsync([FromRoute] Guid id)
         {
             var taskModel = await _taskRepo.DeleteByIdAsync(id);
