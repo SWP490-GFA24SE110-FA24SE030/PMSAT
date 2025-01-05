@@ -102,7 +102,7 @@ namespace api.Controllers
             await _taskRepo.CreateAsync(taskModel);
 
             //return CreatedAtAction(nameof(GetById), new {id = taskModel}, taskModel.ToTaskDto());
-            return Ok(new { Message = "Task created successfully." });
+            return Ok(new {taskModel.Id, Message = "Task created successfully." });
         }
 
         //[HttpPut("{taskId}")]
