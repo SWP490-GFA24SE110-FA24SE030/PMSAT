@@ -49,7 +49,7 @@ namespace api.Controllers
             return Ok(sprintsBelongToProject.Select(s => s.ToSprintDto()));
         }
 
-        [HttpPut("sprintId={sprintId}/taskId = {taskId}/AddTaskToSprint")]
+        [HttpPut("sprintId={sprintId}/taskId={taskId}/AddTaskToSprint")]
         public async Task<IActionResult> AddTaskToSprint([FromRoute] Guid sprintId, [FromRoute] Guid taskId)
         {
             var task = await _taskRepo.GetByIdAsync(taskId);

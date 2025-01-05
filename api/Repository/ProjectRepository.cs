@@ -123,13 +123,21 @@ namespace api.Repository
 
         public async Task<List<Project>> GetAllAsync()
         {
-            return await _context.Projects
+            var projects = await _context.Projects
                 .Include(a => a.AnalysisResults)
                 .Include(b => b.Boards)
+                .ThenInclude(t => t.TaskPs)
                 .Include(pm => pm.ProjectMembers)
                 .Include(s => s.Sprints)
-                .Include(t => t.TaskPs)
                 .ToListAsync();
+
+            // Order the Boards collection by Orders for each project
+            foreach (var project in projects)
+            {
+                project.Boards = project.Boards.OrderBy(b => b.Orders).ToList();
+            }
+
+            return projects;
         }
 
         public async Task<List<Project>> GetAllProjectsByUserIdAsync(Guid userId)

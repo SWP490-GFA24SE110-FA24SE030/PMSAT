@@ -25,7 +25,7 @@ namespace api.Repository
 
         public async Task<List<Board>> GetAllAsync()
         {
-            return await _context.Boards.ToListAsync();
+            return await _context.Boards.OrderBy(b => b.Orders).ToListAsync();
         }
 
         public async Task<bool> DeleteAsync(Guid id)
