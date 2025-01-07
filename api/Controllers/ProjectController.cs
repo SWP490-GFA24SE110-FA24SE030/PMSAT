@@ -58,7 +58,7 @@ namespace api.Controllers
             }
         }
 
-        [HttpGet("prjid={id}")]
+        [HttpGet("projectId={id}")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             var project = await _projectRepo.GetByIdAsync(id);
@@ -118,7 +118,7 @@ namespace api.Controllers
         }
 
         [HttpPut]
-        [Route("edit/prjid={id}")]
+        [Route("edit/projectId={id}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateProjectRequestDto updateProjectRequestDto)
         {
             var projectModel = await _projectRepo.UpdateByIdAsync(id, updateProjectRequestDto);
@@ -131,7 +131,7 @@ namespace api.Controllers
         }
 
         [HttpDelete]
-        [Route("delete/prjid={id}")]
+        [Route("delete/projectId={id}")]
         public async Task<IActionResult> DeleteByIdAsync([FromRoute] Guid id)
         {
             var projectModel = await _projectRepo.DeleteByIdAsync(id);

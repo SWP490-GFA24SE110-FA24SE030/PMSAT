@@ -56,6 +56,30 @@ namespace api.Repository
             return sprint;
         }
 
+        public async Task addTaskFromSprintToBoard(Guid sprintId)
+        {
+            var tasks = await _context.TaskPs.Where(t => t.SprintId == sprintId).ToListAsync(); //_taskRepo.GetTasksFromSprintAsync(sprintId);
+            var boards = await _context.Boards.ToListAsync();
+            foreach (var task in tasks) {
+                foreach (var board in boards)
+                {
+                    if (board.Status == task.Status && board.ProjectId == task.ProjectId)
+                    {
+                        if (!board.TaskPs.Contains(task))
+                        {
+                            board.TaskPs.Add(task); 
+                            Console.WriteLine($"Task '{task.Title}' added to Board with Status '{board.Status}'.");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Task '{task.Title}' is already in the Board.");
+                        }
+                    }
+                }
+            }
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<Sprint> GetByNameAsync(string sprintName)
         {
             return await _context.Sprints.FirstOrDefaultAsync(x => x.Name == sprintName);

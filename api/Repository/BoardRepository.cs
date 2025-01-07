@@ -135,5 +135,34 @@ namespace api.Repository
             board.TaskPs.Add(existingTask);
             await _context.SaveChangesAsync();
         }
+
+        public async Task AddTaskToBoardByStatus(Guid taskId)
+        {
+            var boards = await _context.Boards.ToListAsync();
+            var task = await _context.TaskPs.FindAsync(taskId);
+                foreach (var board in boards)
+                {
+                    if (board.Status == task.Status && board.ProjectId == task.ProjectId)
+                    {
+                        if (!board.TaskPs.Contains(task))
+                        {
+                            board.TaskPs.Add(task); 
+                            Console.WriteLine($"Task '{task.Title}' added to Board with Status '{board.Status}'.");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Task '{task.Title}' is already in the Board.");
+                        }
+                    }
+                }
+            
+        }
+
+        public async Task RemoveTaskFromBoard(Guid taskId)
+        {
+            var task = await _context.TaskPs.FindAsync(taskId);
+            task.BoardId = null;
+            await _context.SaveChangesAsync();
+        }
     }
 }

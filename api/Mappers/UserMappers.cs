@@ -22,18 +22,18 @@ namespace api.Mappers
         }
 
         public static User ToUserFromCreateDTO(this CreateUserRequestDto userDto)
-    {
-        return new User
         {
-            Id = Guid.NewGuid(),
-            Name = userDto.Name,
-            Email = userDto.Email,
-            Password = userDto.Password,
-            Role = userDto.Role,
-            Status = userDto.Status
+            return new User
+            {
+                Id = Guid.NewGuid(),
+                Name = userDto.Name,
+                Email = userDto.Email,
+                Password = userDto.Password,
+                Role = userDto.Role,
+                Status = userDto.Status
 
-        };
-    }
+            };
+        }
     }
 
     

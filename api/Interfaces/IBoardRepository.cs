@@ -13,6 +13,8 @@ namespace api.Interfaces
         Task<string> GetFirstBoardStatusByProjectIdAsync(Guid projectId);
         Task<Board?> UpdateAsync(Guid id, string status);
         Task<bool> DeleteAsync(Guid id);
+        public Task AddTaskToBoardByStatus(Guid taskId);
+        public Task RemoveTaskFromBoard(Guid taskId);
         
     }
 }

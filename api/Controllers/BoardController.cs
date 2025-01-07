@@ -20,7 +20,7 @@ namespace api.Controllers
             _taskRepo = taskRepo;
         }
 
-        [HttpGet("prjid={projectId}/all")]
+        [HttpGet("projectId={projectId}/all")]
         public async Task<IActionResult> GetBoardsByProject([FromRoute] Guid projectId)
         {
             var boards = await _boardRepo.GetByProjectIdAsync(projectId);
@@ -28,7 +28,7 @@ namespace api.Controllers
             return Ok(boards);
         }
 
-        [HttpPost("prjid={projectId}/new")]
+        [HttpPost("projectId={projectId}/new")]
         public async Task<IActionResult> CreateBoard([FromRoute] Guid projectId, [FromBody] CreateBoardDto boardDto)
         {
             var boards = await _boardRepo.GetByProjectIdAsync(projectId);

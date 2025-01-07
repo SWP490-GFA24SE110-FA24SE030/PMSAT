@@ -53,19 +53,28 @@ namespace api.Controllers
         public async Task<IActionResult> AddTaskToSprint([FromRoute] Guid sprintId, [FromRoute] Guid taskId)
         {
             var task = await _taskRepo.GetByIdAsync(taskId);
+            var sprint = await _sprintRepo.GetByIdAsync(sprintId);
             if (task == null) 
             {
                 return BadRequest("Task does not exist!");
             }
-            if (await _sprintRepo.GetByIdAsync(sprintId) == null) 
+            if (sprint == null) 
             {
-                return BadRequest("Task does not exist!");
+                return BadRequest("Sprint does not exist!");
             }
             if (task.SprintId == sprintId)
             {
                 return BadRequest("This task is already assigned to the ongoing sprint.");
             }
+            
+            if (sprint.EndDate != null) 
+            {   
+                await _boardRepo.AddTaskToBoardByStatus(taskId);
+                
+            }
+
             await _sprintRepo.AddTaskToSprint(sprintId, taskId);
+            
             return Ok("Add task successfuly!");
         }
 
@@ -73,6 +82,7 @@ namespace api.Controllers
         public async Task<IActionResult> RemoveTaskFromSprint([FromRoute] Guid taskId)
         {
             var task = await _sprintRepo.RemoveTaskFromSprint(taskId);
+            await _boardRepo.RemoveTaskFromBoard(taskId);
             if (task == null) 
             {
                 return BadRequest("Task does not exist!");
@@ -116,25 +126,7 @@ namespace api.Controllers
         [HttpPut("StartSprint/{sprintId}/{startDate}/{endDate}")]
         public async Task<IActionResult> StartSprint([FromRoute] Guid sprintId, [FromRoute] DateTime startDate, [FromRoute] DateTime endDate)
         {
-            var tasks = await _taskRepo.GetTasksFromSprintAsync(sprintId);
-            var boards = await _boardRepo.GetAllAsync();
-            foreach (var task in tasks) {
-                foreach (var board in boards)
-                {
-                    if (board.Status == task.Status && board.ProjectId == task.ProjectId)
-                    {
-                        if (!board.TaskPs.Contains(task))
-                        {
-                            board.TaskPs.Add(task); 
-                            Console.WriteLine($"Task '{task.Title}' added to Board with Status '{board.Status}'.");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Task '{task.Title}' is already in the Board.");
-                        }
-                    }
-                }
-            }
+            await _sprintRepo.addTaskFromSprintToBoard(sprintId);
 
             await _sprintRepo.UpdateSprintDate(sprintId, startDate, endDate);
 
