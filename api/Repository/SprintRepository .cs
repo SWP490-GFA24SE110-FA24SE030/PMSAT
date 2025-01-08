@@ -39,7 +39,7 @@ namespace api.Repository
                 throw new ArgumentException("Invalid Id provided", nameof(projectId));
             }
 
-            return await _context.Sprints.Where(x => x.ProjectId == projectId).Include(t => t.TaskPs).ToListAsync();
+            return await _context.Sprints.Where(x => x.ProjectId == projectId).Include(t => t.TaskPs).OrderBy(s => s.EndDate).ToListAsync();
         }
 
         public async Task<Sprint?> GetByIdAsync(Guid id)
